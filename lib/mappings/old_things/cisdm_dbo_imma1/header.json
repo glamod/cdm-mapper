@@ -1,0 +1,18 @@
+{
+    "primary_station_id":
+    {
+        "elements": "Identifier"
+    },
+    "longitude": {
+        "elements": "Lon",
+        "transform":"float_opposite",
+        "decimal_places":"decimal_places"
+    },
+    "latitude": {
+        "elements": "Lat",
+        "decimal_places":"decimal_places"
+    },
+    "report_timestamp": {
+        "elements": "Odatetime"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "longitude": {
+        "default": null,
+        "codetable": null,
+        "transform": "float_oposite",
+        "sections": "Lon",
+        "elements": "Lon"
+    },
+    "latitude": {
+        "default": null,
+        "codetable": null,
+        "transform": null,
+        "sections": "Lat",
+        "elements": "Lat"
+    }
+}

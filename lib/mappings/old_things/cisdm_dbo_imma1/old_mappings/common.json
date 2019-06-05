@@ -1,0 +1,30 @@
+{
+    "primary_station_id": {
+        "default": null,
+        "codetable": null,
+        "transform": null,
+        "sections": "Identifier",
+        "elements": "Identifier"
+    },
+    "longitude": {
+        "default": null,
+        "codetable": null,
+        "transform": "float_oposite",
+        "sections": "Lon",
+        "elements": "Lon"
+    },
+    "latitude": {
+        "default": null,
+        "codetable": null,
+        "transform": null,
+        "sections": "Lat",
+        "elements": "Lat"
+    },
+    "report_timestamp": {
+        "default": null,
+        "codetable": null,
+        "transform": "dtime_meds2cdm",
+        "sections": "Odate,Otime",
+        "elements": "Odate,Otime"
+    }
+}

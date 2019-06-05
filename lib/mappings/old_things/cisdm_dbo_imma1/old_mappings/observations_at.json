@@ -1,0 +1,30 @@
+{
+    "longitude": {
+        "default": null,
+        "codetable": null,
+        "transform": "float_oposite",
+        "sections": "Lon",
+        "elements": "Lon"
+    },
+    "latitude": {
+        "default": null,
+        "codetable": null,
+        "transform": null,
+        "sections": "Lat",
+        "elements": "Lat"
+    },
+    "observation_value": {
+        "default": null,
+        "codetable": null,
+        "transform": "temperature_C2K",
+        "sections": "Airtemp",
+        "elements": "Airtemp"
+    },
+    "original_value": {
+        "default": null,
+        "codetable": null,
+        "transform": "from_schema.round_to_precision,Airtemp",
+        "sections": "Airtemp",
+        "elements": "Airtemp"
+    }
+}

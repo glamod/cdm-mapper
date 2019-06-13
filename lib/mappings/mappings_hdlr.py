@@ -1,26 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# IN:
-# Registered data model name
-# Data frame or pandas pandas.io.parsers.TextFileReader with data model to map
-# Schema with data model definition: schema = { x:attributes for x in elements }, where x is tuple (sections) or just name (no sections),
-# including _datetime
-#
-# MAP for iModel:
-# In mappings/lib/imodel
-#
-# Data frame column index, schema and mapping structure must match
-#
-# HOW:
-# Goes through defined mappings for imodel and maps in a single data frame?
-# Give as optional input what you want to map?
-# Only define mappings for things that are mappable, don't create a mapping that is 90% empty!
-# Can mappings be interdependent: obs table gets something in header table? Then we could not
-# do independent mapping: create fully independent mappings!
-# Ouput is, again, multiindexed at the columns: (table,element)
+"""
+Created on Thu Apr 11 13:45:38 2019
 
-# print(sys.getsizeof(OBEJCT_NAME_HERE))
+Module to handle data models mappings to C3S Climate Data Store 
+Common Data Model (CMD) tables within the cdm tool.
+
+@author: iregon
+"""
 # we remove python2 portability regarding OrderedDictionaries:
 #from collections import OrderedDict # This is because python2 dictionaries do not keep key insertion order: this should only matter creating final tables
 #maps[key] = json.load(json_file), object_pairs_hook=OrderedDict)
@@ -104,7 +92,8 @@ def expand_integer_range_key(d):
                 for k, v in d.items():
                     expand_integer_range_key(v)
 
-def get_functions_module_path(imodel):
+def get_functions_module_path(imodel, log_level = 'INFO'):
+    logger = logging_hdlr.init_logger(__name__,level = log_level)
     imodel_module = os.path.join(module_path,imodel,imodel + ".py")
     if not os.path.isfile(imodel_module):
         logger.error('No mapping functions module for model {}'.format(imodel))
@@ -114,7 +103,8 @@ def get_functions_module_path(imodel):
         imodel_module_tree.extend([imodel,imodel])
         return '.'.join(imodel_module_tree) #'cdm.mapper.lib.' + '.'.join([imodel,imodel])
 
-def load_code_tables_maps(imodel, codes_subset = None, log_level = 'DEBUG'):
+def load_code_tables_maps(imodel, codes_subset = None, log_level = 'INFO'):
+    logger = logging_hdlr.init_logger(__name__,level = log_level)
     imodel_lib = os.path.join(module_path,imodel)
     if not os.path.isdir(imodel_lib):
         logger.error('No model mapping library for model {}'.format(imodel))
@@ -145,7 +135,7 @@ def load_code_tables_maps(imodel, codes_subset = None, log_level = 'DEBUG'):
     return codes
 
 
-def load_tables_maps(imodel, cdm_subset = None, log_level = 'DEBUG'):
+def load_tables_maps(imodel, cdm_subset = None, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
     imodel_lib = os.path.join(module_path,imodel)
     if not os.path.isdir(imodel_lib):

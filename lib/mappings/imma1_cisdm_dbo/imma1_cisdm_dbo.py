@@ -53,7 +53,7 @@ class mapping_functions():
         minutes = int( math.floor(60.0 * math.fmod(ds, 1)))
         return hours,minutes
 
-    def datetime_imma1(self,df): # have to add UTC awareness, and all that!
+    def datetime_imma1(self,df): # TZ awareness?
         date_format = "%Y-%m-%d-%H-%M"
         hours,minutes = np.vectorize(mapping_functions(self.atts).datetime_decimalhour_to_HM)(df.iloc[:,-1].values)
         # the mapping_functions(self.atts) does not look right, but otherwise it won't recognize things, seems it need to be
@@ -61,11 +61,12 @@ class mapping_functions():
         df.drop(df.columns[len(df.columns)-1], axis=1, inplace=True)
         df['H'] = hours
         df['M'] = minutes
-        data = pd.to_datetime(df.astype(str).apply("-".join, axis=1), format = date_format, errors = 'coerce')
+        # VALUES!!!!!!!
+        data = pd.to_datetime(df.astype(str).apply("-".join, axis=1).values, format = date_format, errors = 'coerce')
         return data
 
-    def datetime_now(self): # have to add UTC awareness, and all that!
-        return datetime.datetime.now()#.strftime("%Y-%m-%d %H:%M:%S")
+    def datetime_utcnow(self):
+        return datetime.datetime.utcnow()
 
     def decimal_places(self,element):
         return self.atts.get(element[0]).get('decimal_places')

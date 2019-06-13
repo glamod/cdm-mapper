@@ -101,7 +101,7 @@
         "default": 4
     },
     "record_timestamp": {
-        "transform": "datetime_now"
+        "transform": "datetime_utcnow"
     },
     "history": {
         "default": "Initial conversion from IMMA"

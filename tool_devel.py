@@ -19,7 +19,7 @@ import cdm
 
 
 # Input -----------------------------------------------------------------------
-data_file = 'meds_2010-07.imma'
+data_file = 'meds_2010-07_subset.imma'
 main_model = 'imma1'
 sections = ['core','c1','c98','c99']
 supp_model = 'cisdm_dbo_imma1'
@@ -37,11 +37,14 @@ if supp_model:
     supp_schema = mdf_reader.schemas.read_schema(schema_name = supp_model)
 
 # Read ------------------------------------------------------------------------
-imodel = mdf_reader.read(data_file_path, sections = sections, data_model = main_model, supp_section = supp_section ,supp_model = supp_model )
-
-imodel['data'].loc[0,('c1','PT')]=np.nan
-imodel['data'].loc[4,('c1','PT')]=np.nan
-imodel['data'].loc[4,('core','YR')]=np.nan
-imodel['data'].loc[19999,('c99','Identifier')]=np.nan
+imodel = mdf_reader.read(data_file_path, sections = sections, data_model = main_model, supp_section = supp_section ,supp_model = supp_model, chunksize = 10000 )
+#imodel['data'].loc[0,('c1','PT')]=np.nan
+#imodel['data'].loc[4,('c1','PT')]=np.nan
+#imodel['data'].loc[4,('core','YR')]=np.nan
+#imodel['data'].loc[19999,('c99','Identifier')]=np.nan
 cdm_tables = cdm.map_model(mapping, imodel['data'], imodel['atts'], log_level = 'INFO')
-ascii_tables = cdm.cdm_to_ascii(cdm_tables,log_level ='DEBUG',out_dir = '/Users/iregon/', suffix = None, prefix = None)
+ascii_tables = cdm.cdm_to_ascii(cdm_tables,log_level ='DEBUG',out_dir = '/Users/iregon/', suffix = 'chunking', prefix = None)
+
+imodel = mdf_reader.read(data_file_path, sections = sections, data_model = main_model, supp_section = supp_section ,supp_model = supp_model)
+cdm_tables = cdm.map_model(mapping, imodel['data'], imodel['atts'], log_level = 'INFO')
+cdm.cdm_to_ascii(cdm_tables,log_level ='DEBUG',out_dir = '/Users/iregon/', suffix = 'no_chunking', prefix = None)

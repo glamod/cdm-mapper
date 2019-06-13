@@ -1,26 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# IN:
-# Registered data model name
-# Data frame or pandas pandas.io.parsers.TextFileReader with data model to map
-# Schema with data model definition: schema = { x:attributes for x in elements }, where x is tuple (sections) or just name (no sections),
-# including _datetime
-#
-# MAP for iModel:
-# In mappings/lib/imodel
-#
-# Data frame column index, schema and mapping structure must match
-#
-# HOW:
-# Goes through defined mappings for imodel and tables in a single data frame?
-# Give as optional input what you want to map?
-# Only define mappings for things that are mappable, don't create a mapping that is 90% empty!
-# Can mappings be interdependent: obs table gets something in header table? Then we could not
-# do independent mapping: create fully independent mappings!
-# Ouput is, again, multiindexed at the columns: (table,element)
+"""
+Created on Thu Apr 11 13:45:38 2019
 
-# print(sys.getsizeof(OBEJCT_NAME_HERE))
+Module to handle C3S Climate Data Store Common Data Model (CMD) tables within
+the cdm tool.
+
+@author: iregon
+"""
 
 # we remove python2 portability regarding OrderedDictionaries:
 #from collections import OrderedDict # This is because python2 dictionaries do not keep key insertion order: this should only matter creating final tables
@@ -61,6 +49,17 @@ def load_tables(log_level = 'DEBUG'):
     return tables
 
 
+ ### cdm elements dtypes
+# Mail sent may 7th to Dave. Are the types there real SQL types, or just approximations?
+# Numeric type in table definition not useful here to define floats with a specific precision
+# We should be able to use those definitions. Keep in mind that arrays are object type in pandas!
+# Remember any int and float (int, numeric) need to be tied for the parser!!!!
+# Also datetimes!
+# Until CDM table definition gets clarified:
+# We map from cdm table definition types to those in properties.pandas_dtypes.get('from_sql'), else: 'object'
+# We update to df column dtype if is of float type
+
+
 def from_glamod(table_filename, gitlinkroot = None, element_col = 1, type_col = 2, field_separator = '\t',skip_lines = 3):
     # Get tables from GLAMOD Git repo and format to nested dictionary with:
     # { cdm_name: {'data_type':value}}
@@ -72,11 +71,7 @@ def from_glamod(table_filename, gitlinkroot = None, element_col = 1, type_col = 
     #
     # About data type definitions in this source (table_definitions in GitHub):
     # it is not controlled vocab. and might change in the future!!!!
-    #
-    # About how do we use cdm data types this info in the tool:
-    # map here SQL data types to numpy dtypes?: nooooo, depending on where we use
-    # this data_types (mapper or table_writer) we might need to use this info in a different way..
-    # Here we just get the info and then each module uses it as needed
+
 
     # Get data types and clean primary key, optional and whitespaces: '(pk)', '*'
     logger = logging_hdlr.init_logger(__name__,level = 'INFO')

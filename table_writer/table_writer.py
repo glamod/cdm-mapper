@@ -1,16 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 11 13:45:38 2019
+
+Exports C3S Climate Data Store Common Data Model (CDM) tables 
+contained in a dictionary of pandas DataFrames (or pd.io.parsers.TextFileReader)
+to ascii files.
+
+This module uses a set of printer functions to "print" element values to a
+string object before export to the final ascii files. Each of the CDM table element's 
+has a data type (pseudo-sql as defined in the CDM documentation) which defines 
+the printer function used. 
+
+Numeric data types are printed with a number of decimal places as defined in
+the data element attributes input to this module (this is defined on a
+CDMelement-imodelMapping specific basis in the data model mapping to the CDM) 
+If it is not defined in the input attributes, the number of decimal places used
+is a tool default defined in properties.py
+
+@author: iregon
+"""
 
 import os
 import pandas as pd
 import numpy as np
 from io import StringIO
-import importlib
-import glob
 from cdm import properties
 from cdm.common import pandas_TextParser_hdlr
 from cdm.common import logging_hdlr
-#from ..lib.tables import tables_hdlr
+
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -26,8 +44,10 @@ def print_float(data,null_label, decimal_places = None):
     data.iloc[np.where(data.isna())] = null_label
     return data
 
-def print_datetime_tz(data,null_label):
-    return 'datetime_tz'
+def print_datetime(data,null_label):
+    data.iloc[np.where(data.notna())] = data.iloc[np.where(data.notna())].dt.strftime("%Y-%m-%d %H:%M:%S")
+    data.iloc[np.where(data.isna())] = null_label
+    return data
 
 def print_varchar(data,null_label):
     data.iloc[np.where(data.notna())] = data.iloc[np.where(data.notna())].astype(str)
@@ -40,17 +60,17 @@ def print_integer_array(data,null_label):
 def print_float_array(data,null_label, decimal_places = None):
      return 'float array not defined in printers'
 
-def print_datetime_tz_array(data,null_label):
+def print_datetime_array(data,null_label):
     return 'datetime tz array not defined in printers'
 
 def print_varchar_array(data,null_label):
     return data.apply(print_varchar_array_i,null_label=null_label)
 
 printers = {'int': print_integer, 'numeric': print_float, 'varchar':print_varchar,
-            'timestamp with timezone': print_datetime_tz,
+            'timestamp with timezone': print_datetime,
             'int[]': print_integer_array, 'numeric[]': print_float_array,
             'varchar[]':print_varchar_array,
-            'timestamp with timezone[]': print_datetime_tz_array}
+            'timestamp with timezone[]': print_datetime_array}
 
 iprinters_kwargs = {'numeric':['decimal_places'],
                    'numeric[]':['decimal_places']}
@@ -80,13 +100,13 @@ def print_varchar_array_i(row,null_label = None):
     else:
         return null_label
 
-def table_to_ascii(table, table_atts, log_level = 'INFO', delimiter = '|', null_label = 'null', extension = 'psv', full_table = True):
+def table_to_ascii(table, table_atts, delimiter = '|', null_label = 'null', cdm_complete = True, filename = None, full_table = True, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
-#   Check input:
-#   table either df or parser
-#   table columns in table_atts
-    # All this change if iterating over chunks!!!! :()
-    table = [table]
+
+    # Convert to iterable if plain dataframe
+    if isinstance(table,pd.DataFrame):
+        table = [table]
+    ichunk = 0
     for itable in table:
         # drop records with no 'observation_value'
         empty_table = False
@@ -98,6 +118,7 @@ def table_to_ascii(table, table_atts, log_level = 'INFO', delimiter = '|', null_
         if empty_table:
             logger.warning('No observation values in table')
             ascii_table = pd.DataFrame(columns = table_atts.keys(), dtype = 'object')
+            ascii_table.to_csv(filename, index = False, sep = delimiter, header = True, mode = 'w')
             break    
         ascii_table = pd.DataFrame(index = itable.index, columns = table_atts.keys(), dtype = 'object')
         for iele in table_atts.keys():
@@ -114,24 +135,23 @@ def table_to_ascii(table, table_atts, log_level = 'INFO', delimiter = '|', null_
                     logger.error('No printer defined for element {}'.format(iele))
             else:
                 ascii_table[iele] = null_label
+                
+        header = False if ichunk > 0 else True 
+        wmode = 'a' if ichunk > 0 else 'w'
+        columns_to_ascii = [ x for x in table_atts.keys() if x in itable.columns ] if not cdm_complete else table_atts.keys()
+        ascii_table.to_csv(filename, index = False, sep = delimiter, columns = columns_to_ascii, header = header, mode = wmode)
+        ichunk += 1
 
-    # Now clean final ascii_table from empty columns if full_table = False (TBI)
-    
-#                logger.error('No printer defined for cdm element \'{0}\' data type \'{1}\''.format(iele,itype))
+    return
 
-    return ascii_table
-
-def cdm_to_ascii( cdm, log_level = 'INFO', delimiter = '|', null_label = 'null', extension = 'psv',out_dir = None, suffix = None, prefix = None ):
+def cdm_to_ascii( cdm, delimiter = '|', null_label = 'null', cdm_complete = True, extension = 'psv',out_dir = None, suffix = None, prefix = None, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
-    # Check input:
-#    cdm must be a dictionary
-#    keys must be in properties.cdm_tables
-#    'atts' and 'data' in cdm[table]
-    # Write thing:
+    # Because how the printers are written, they modify the original data frame!,
+    # also removing rows with empty obervation_value in observation_tables
     extension = '.' + extension
     for table in cdm.keys():
         logger.info('Printing table {}'.format(table))
-        filename = os.path.join(out_dir,'-'.join(filter(bool,[prefix,table,suffix])) + extension )
-        ascii_table = table_to_ascii(cdm[table]['data'], cdm[table]['atts'], delimiter = delimiter, null_label= null_label, extension = extension, log_level = log_level)
-        ascii_table.to_csv(filename, index = False, sep = delimiter)
-    return ascii_table
+        filename = '-'.join(filter(bool,[prefix,table,suffix])) + extension
+        filepath = filename if not out_dir else os.path.join(out_dir, filename )
+        table_to_ascii(cdm[table]['data'], cdm[table]['atts'], delimiter = delimiter, null_label= null_label, cdm_complete = cdm_complete, filename = filepath, log_level = log_level)
+    return

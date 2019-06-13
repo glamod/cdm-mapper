@@ -3,7 +3,7 @@
 """
 Created on Tue Apr  2 10:34:56 2019
 
-Assumes we are never writing a header!
+Module with functions to handle pd.io.parsers.TextFileReader objects.
 
 @author: iregon
 """

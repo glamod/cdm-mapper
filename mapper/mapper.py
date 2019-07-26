@@ -25,12 +25,12 @@ from cdm.lib.mappings import mappings_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 
-def _map(imodel, data, data_atts, cdm_subset = None, chunksize = None, log_level = 'INFO'):
+def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
-    
+
     # Get imodel mapping pack
     try:
-        # Read mappings to CDM from imodel    
+        # Read mappings to CDM from imodel
         imodel_maps = mappings_hdlr.load_tables_maps(imodel, cdm_subset = cdm_subset)
         if len(imodel_maps) < 1:
                 logger.error('No mappings found for model {}'.format(imodel))
@@ -46,11 +46,11 @@ def _map(imodel, data, data_atts, cdm_subset = None, chunksize = None, log_level
         imodel_code_tables = mappings_hdlr.load_code_tables_maps(imodel)
         if len(imodel_code_tables) < 1:
                 logger.warning('No code table mappings found for model {}'.format(imodel))
-                
+
     except Exception:
         logger.debug('Error loading {} cdm mappings'.format(imodel), exc_info=True)
         return
-    
+
     if not imodel_maps:
         logger.error('Error loading {} cdm mappings'.format(imodel))
         return
@@ -73,11 +73,12 @@ def _map(imodel, data, data_atts, cdm_subset = None, chunksize = None, log_level
         out_dtypes[table].update({ x:cdm_atts.get(table,{}).get(x,{}).get('data_type') for x in imodel_maps[table].keys()})
         date_columns[table].extend([ i for i,x in enumerate(list(out_dtypes[table].keys())) if 'timestamp' in out_dtypes[table].get(x) ])
         out_dtypes[table].update({ k:properties.pandas_dtypes.get('from_sql').get(v,'object') for k,v in out_dtypes[table].items()})
+
     # Now map per iterable item, per table
     for idata in data:
         cols = [x for x in idata]
         for table,mapping in imodel_maps.items():
-            table_df_i = pd.DataFrame(index = idata.index, columns = mapping.keys())
+            table_df_i = pd.DataFrame(index = idata.index, columns = mapping.keys()) # We cannot predifine column based dtypes here!
             logger.debug('Table: {}'.format(table))
             for cdm_key,imapping in mapping.items():
                 logger.debug('\tElement: {}'.format(cdm_key))
@@ -117,7 +118,7 @@ def _map(imodel, data, data_atts, cdm_subset = None, chunksize = None, log_level
                     try:
                         s = pd.DataFrame(table_map).unstack().rename_axis((elements)).rename('cdm')
                     except:
-                        s = pd.DataFrame(table_map.values(),index = table_map.keys(),columns = ['cdm']).rename_axis((elements))  
+                        s = pd.DataFrame(table_map.values(),index = table_map.keys(),columns = ['cdm']).rename_axis((elements))
                     # Make sure what we try to map is a df, not a series (method join is only on df...)
                     try:
                         to_map = to_map.to_frame()
@@ -143,18 +144,24 @@ def _map(imodel, data, data_atts, cdm_subset = None, chunksize = None, log_level
                         cdm_tables[table]['atts'][cdm_key].update({'decimal_places':decimal_places})
                     else:
                         cdm_tables[table]['atts'][cdm_key].update({'decimal_places':eval('imodel_functions.' + decimal_places)(elements)})
-                
+
             # think that NaN also casts floats to float64....!keep floats of lower precision to its original one
+            # will convert all NaN to object type!
+            # but also some numerics with values, like imma observation-value (temperatures),
+            # are being returned as objects!!! pero esto qué es?
             out_dtypes[table].update({ i:table_df_i[i].dtype for i in table_df_i if table_df_i[i].dtype in properties.numpy_floats and out_dtypes[table].get(i) not in properties.numpy_floats})
+            out_dtypes[table].update({ i:table_df_i[i].dtype for i in table_df_i if table_df_i[i].dtype == 'object' and out_dtypes[table].get(i) not in properties.numpy_floats })
+            if 'observation_value' in table_df_i:
+                table_df_i.dropna(subset=['observation_value'],inplace=True)
             table_df_i.to_csv(cdm_tables[table]['buffer'], header = False, index = False, mode = 'a')
+
 
     for table in cdm_tables.keys():
         # Convert dtime to object to be parsed by the reader
         cdm_tables[table]['buffer'].seek(0)
-        cdm_tables[table]['data'] = pd.read_csv(cdm_tables[table]['buffer'],names = out_dtypes[table].keys(), dtype = out_dtypes[table], parse_dates = date_columns[table], chunksize = chunksize)
-        if not chunksize:
-            cdm_tables[table]['buffer'].close()
-            cdm_tables[table].pop('buffer')
+        cdm_tables[table]['data'] = pd.read_csv(cdm_tables[table]['buffer'],names = out_dtypes[table].keys(), dtype = out_dtypes[table], parse_dates = date_columns[table])
+        cdm_tables[table]['buffer'].close()
+        cdm_tables[table].pop('buffer')
 
     return cdm_tables
 
@@ -167,7 +174,8 @@ def map_model( imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
         return
 
     # Check input data type and content (empty?)
-    # Make sure data is an iterable
+    # Make sure data is an iterable: this is to homogeneize how we handle
+    # dataframes and textreaders
     if isinstance(data,pd.DataFrame):
         logger.debug('Input data is a pd.DataFrame')
         if len(data) == 0:
@@ -175,20 +183,18 @@ def map_model( imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
             return
         else:
             data = [data]
-            chunksize = None
     elif isinstance(data,pd.io.parsers.TextFileReader):
         logger.debug('Input is a pd.TextFileReader')
         not_empty,data = pandas_TextParser_hdlr.is_not_empty(data)
         if not not_empty:
             logger.error('Input data is empty')
             return
-        else:
-            chunksize = data.chunksize
+
     else:
         logger.error('Input data type ''{}'' not supported'.format(type(data)))
         return
 
     # Map thing:
-    data_cdm = _map(imodel, data, data_atts, cdm_subset = cdm_subset, chunksize = chunksize, log_level = log_level)
+    data_cdm = _map(imodel, data, data_atts, cdm_subset = cdm_subset,log_level = log_level)
 
     return data_cdm

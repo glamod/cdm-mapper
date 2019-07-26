@@ -31,7 +31,7 @@ def load_tables(log_level = 'DEBUG'):
     table_paths = glob.glob(os.path.join(table_path,'*.json'))
     table_paths = { os.path.basename(x).split(".")[0]:x for x in list(table_paths) }
 
-    observation_tables = [ x for x in properties.cdm_tables if x.startswith('observations_')]
+    observation_tables = [ x for x in properties.cdm_tables if x.startswith('observations-')]
     # Make a copy from the generic observations table for each to the observations
     # table defined in properties
     observation_path = table_paths.get('observations')

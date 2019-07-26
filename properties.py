@@ -4,10 +4,10 @@ import glob
 mappings_lib = os.path.join(os.path.dirname(__file__),'lib','mappings')
 supported_models = [ os.path.basename(x).split(".")[0] for x in glob.glob(mappings_lib + '/*/*.py') if os.path.basename(x).split(".")[0] == os.path.dirname(x).split("/")[-1]]
 
-cdm_tables = ['header','observations_at','observations_sst',
-              'observations_dpt','observations_wbt',
-              'observations_wd','observations_ws',
-              'observations_slp']
+cdm_tables = ['header','observations-at','observations-sst',
+              'observations-dpt','observations-wbt',
+              'observations-wd','observations-ws',
+              'observations-slp']
 
 # DATA TYPES ------------------------------------------------------------------
 numpy_integers = ['int8','int16','int32','int64','uint8','uint16','uint32','uint64']

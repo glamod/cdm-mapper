@@ -103,51 +103,86 @@ def print_varchar_array_i(row,null_label = None):
 def table_to_ascii(table, table_atts, delimiter = '|', null_label = 'null', cdm_complete = True, filename = None, full_table = True, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
 
-    # Convert to iterable if plain dataframe
-    if isinstance(table,pd.DataFrame):
-        table = [table]
-    ichunk = 0
-    for itable in table:
-        # drop records with no 'observation_value'
-        empty_table = False
-        if 'observation_value' in itable:
-            itable.dropna(subset=['observation_value'],inplace=True)
-            empty_table = True if len(itable) == 0 else False
-        elif 'observation_value' in table_atts.keys():
-            empty_table = True  
-        if empty_table:
-            logger.warning('No observation values in table')
-            ascii_table = pd.DataFrame(columns = table_atts.keys(), dtype = 'object')
-            ascii_table.to_csv(filename, index = False, sep = delimiter, header = True, mode = 'w')
-            break    
-        ascii_table = pd.DataFrame(index = itable.index, columns = table_atts.keys(), dtype = 'object')
-        for iele in table_atts.keys():
-            if iele in itable:
-                itype = table_atts.get(iele).get('data_type')
-                if printers.get(itype):
-                    iprinter_kwargs = iprinters_kwargs.get(itype)
-                    if iprinter_kwargs:
-                        kwargs = { x:table_atts.get(iele).get(x) for x in iprinter_kwargs}
-                    else:
-                        kwargs = {}
-                    ascii_table[iele] = printers.get(itype)(itable[iele], null_label, **kwargs)
+    empty_table = False
+    if 'observation_value' in table:
+        table.dropna(subset=['observation_value'],inplace=True)
+        empty_table = True if len(table) == 0 else False
+    elif 'observation_value' in table_atts.keys():
+        empty_table = True  
+    if empty_table:
+        logger.warning('No observation values in table')
+        ascii_table = pd.DataFrame(columns = table_atts.keys(), dtype = 'object')
+        ascii_table.to_csv(filename, index = False, sep = delimiter, header = True, mode = 'w')
+        return
+    
+    ascii_table = pd.DataFrame(index = table.index, columns = table_atts.keys(), dtype = 'object')
+    for iele in table_atts.keys():
+        if iele in table:
+            itype = table_atts.get(iele).get('data_type')
+            if printers.get(itype):
+                iprinter_kwargs = iprinters_kwargs.get(itype)
+                if iprinter_kwargs:
+                    kwargs = { x:table_atts.get(iele).get(x) for x in iprinter_kwargs}
                 else:
-                    logger.error('No printer defined for element {}'.format(iele))
+                    kwargs = {}
+                ascii_table[iele] = printers.get(itype)(table[iele], null_label, **kwargs)
             else:
-                ascii_table[iele] = null_label
-                
-        header = False if ichunk > 0 else True 
-        wmode = 'a' if ichunk > 0 else 'w'
-        columns_to_ascii = [ x for x in table_atts.keys() if x in itable.columns ] if not cdm_complete else table_atts.keys()
-        ascii_table.to_csv(filename, index = False, sep = delimiter, columns = columns_to_ascii, header = header, mode = wmode)
-        ichunk += 1
+                logger.error('No printer defined for element {}'.format(iele))
+        else:
+            ascii_table[iele] = null_label
+            
+    header = True 
+    wmode = 'w'
+    columns_to_ascii = [ x for x in table_atts.keys() if x in table.columns ] if not cdm_complete else table_atts.keys()
+    ascii_table.to_csv(filename, index = False, sep = delimiter, columns = columns_to_ascii, header = header, mode = wmode)
+
+#    # Convert to iterable if plain dataframe
+#    # This is no longer needed as the mapper now only produces real dataframes,
+#    # never TextParser...
+#    if isinstance(table,pd.DataFrame):
+#        table = [table]
+#    ichunk = 0
+#    for itable in table:
+#        # drop records with no 'observation_value'
+#        empty_table = False
+#        if 'observation_value' in itable:
+#            itable.dropna(subset=['observation_value'],inplace=True)
+#            empty_table = True if len(itable) == 0 else False
+#        elif 'observation_value' in table_atts.keys():
+#            empty_table = True  
+#        if empty_table:
+#            logger.warning('No observation values in table')
+#            ascii_table = pd.DataFrame(columns = table_atts.keys(), dtype = 'object')
+#            ascii_table.to_csv(filename, index = False, sep = delimiter, header = True, mode = 'w')
+#            break    
+#        ascii_table = pd.DataFrame(index = itable.index, columns = table_atts.keys(), dtype = 'object')
+#        for iele in table_atts.keys():
+#            if iele in itable:
+#                itype = table_atts.get(iele).get('data_type')
+#                if printers.get(itype):
+#                    iprinter_kwargs = iprinters_kwargs.get(itype)
+#                    if iprinter_kwargs:
+#                        kwargs = { x:table_atts.get(iele).get(x) for x in iprinter_kwargs}
+#                    else:
+#                        kwargs = {}
+#                    ascii_table[iele] = printers.get(itype)(itable[iele], null_label, **kwargs)
+#                else:
+#                    logger.error('No printer defined for element {}'.format(iele))
+#            else:
+#                ascii_table[iele] = null_label
+#                
+#        header = False if ichunk > 0 else True 
+#        wmode = 'a' if ichunk > 0 else 'w'
+#        columns_to_ascii = [ x for x in table_atts.keys() if x in itable.columns ] if not cdm_complete else table_atts.keys()
+#        ascii_table.to_csv(filename, index = False, sep = delimiter, columns = columns_to_ascii, header = header, mode = wmode)
+#        ichunk += 1
 
     return
 
 def cdm_to_ascii( cdm, delimiter = '|', null_label = 'null', cdm_complete = True, extension = 'psv',out_dir = None, suffix = None, prefix = None, log_level = 'INFO'):
     logger = logging_hdlr.init_logger(__name__,level = log_level)
     # Because how the printers are written, they modify the original data frame!,
-    # also removing rows with empty obervation_value in observation_tables
+    # also removing rows with empty observation_value in observation_tables
     extension = '.' + extension
     for table in cdm.keys():
         logger.info('Printing table {}'.format(table))

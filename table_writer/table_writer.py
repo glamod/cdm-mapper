@@ -108,7 +108,9 @@ def table_to_ascii(table, table_atts, delimiter = '|', null_label = 'null', cdm_
         table.dropna(subset=['observation_value'],inplace=True)
         empty_table = True if len(table) == 0 else False
     elif 'observation_value' in table_atts.keys():
-        empty_table = True  
+        empty_table = True
+    else:
+        empty_table = True if len(table) == 0 else False  
     if empty_table:
         logger.warning('No observation values in table')
         ascii_table = pd.DataFrame(columns = table_atts.keys(), dtype = 'object')

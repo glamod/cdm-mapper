@@ -6,7 +6,7 @@
         "kwargs":{"prepend":"ICOADS-30","separator":"-"}
     },
     "application_area": {
-        "default": [1,7,10,12]
+        "default": [1,7,10,11]
     },
     "observing_programme": {
         "sections": "c1",
@@ -110,7 +110,7 @@
         "sections":["c1","c1","core","core"],
         "elements": ["SID","DCK","YR","MO"],
         "transform": "string_join_add",
-        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-"}
+        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-","zfill_col":[0,3],"zfill":[3,2]}
     },
     "source_record_id": {
         "sections": "c98",

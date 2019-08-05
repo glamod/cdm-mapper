@@ -27,11 +27,6 @@ import numpy as np
 import pandas as pd
 import datetime
 
-def longitude_360to180_i(lon):
-    if lon > 180:
-        return -180 + math.fmod(lon, 180)
-    else:
-        return lon
 
 def location_accuracy_i(li,lat):
     #    math.sqrt(111**2)=111.0
@@ -66,7 +61,7 @@ class mapping_functions():
         df.drop(df.columns[len(df.columns)-1], axis=1, inplace=True)
         df['H'] = hours
         df['M'] = minutes
-        # VALUES!!!!
+        # VALUES!!!!!!!
         data = pd.to_datetime(df.astype(str).apply("-".join, axis=1).values, format = date_format, errors = 'coerce')
         return data
 
@@ -96,6 +91,9 @@ class mapping_functions():
             joint = joint + sep + df.iloc[:,i].astype(str)
         return joint
 
+    def float_opposite(self,ds):
+        return -ds
+
     def float_scale(self,ds,factor = 1):
         return ds*factor
 
@@ -105,12 +103,9 @@ class mapping_functions():
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
         return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])
 
-    def longitude_360to180(self,ds):
-        lon = np.vectorize(longitude_360to180_i)(ds)
-        return lon
 
     def observing_programme(self,ds):
-        op = { str(i):[7, 56] for i in range(0,6) }
+        op = { str(i):[5,7,56] for i in range(0,6) }
         op.update({'7':[5,7,9]})
         return ds.map( op, na_action = 'ignore' )
         # Previous version:

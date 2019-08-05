@@ -6,7 +6,7 @@
         "kwargs":{"prepend":"ICOADS-30","separator":"-"}
     },
     "application_area": {
-        "default": [1,7,10,12]
+        "default": [1,7,10,11]
     },
     "observing_programme": {
         "sections": "c1",
@@ -66,7 +66,7 @@
         "sections": "core",
         "elements": "VS"
     },
-    "station_speed": {
+    "station_course": {
         "sections": "core",
         "elements": "DS"
     },

@@ -38,7 +38,7 @@ def print_integer(data,null_label):
     return data
 
 def print_float(data,null_label, decimal_places = None):
-    decimal_places = properties.default_decimal_places if decimal_places is not None else decimal_places
+    decimal_places = properties.default_decimal_places if decimal_places is None else decimal_places
     format_float='{:.' + str(decimal_places) + 'f}'
     data.iloc[np.where(data.notna())] = data.iloc[np.where(data.notna())].apply(format_float.format)
     data.iloc[np.where(data.isna())] = null_label

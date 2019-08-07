@@ -56,7 +56,7 @@
         "default": 2
     },
     "units": {
-        "default": 110
+        "default": "110"
     },
     "conversion_flag": {
         "default": 0
@@ -83,7 +83,7 @@
     "original_precision": {
     },
     "original_units": {
-        "default": 110
+        "default": "110"
     },
     "original_value": {
         "sections": "core",
@@ -91,9 +91,6 @@
         "transform": "integer_to_float",
         "kwargs":{"float_type":"float16"},
         "decimal_places": 0
-    },
-    "conversion_method": {
-        "default": 1
     },
     "processing_level": {
         "default": 3
@@ -114,6 +111,6 @@
         "sections":["c1","c1","core","core"],
         "elements": ["SID","DCK","YR","MO"],
         "transform": "string_join_add",
-        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-"}
+        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-","zfill_col":[0,3],"zfill":[3,2]}
     }
 }

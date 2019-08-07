@@ -51,10 +51,10 @@
         "decimal_places": "decimal_places"
     },
     "value_significance": {
-        "default": 12
+        "default": 2
     },
     "units": {
-        "default": 731
+        "default": "731"
     },
     "conversion_flag": {
         "default": 0
@@ -81,15 +81,12 @@
     "original_precision": {
     },
     "original_units": {
-        "default": 731
+        "default": "731"
     },
     "original_value": {
         "sections": "c99",
         "elements": "WSp",
         "decimal_places": "decimal_places"
-    },
-    "conversion_method": {
-        "default": 1
     },
     "processing_level": {
         "default": 3
@@ -110,6 +107,6 @@
         "sections":["c1","c1","core","core"],
         "elements": ["SID","DCK","YR","MO"],
         "transform": "string_join_add",
-        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-"}
+        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-","zfill_col":[0,3],"zfill":[3,2]}
     }
 }

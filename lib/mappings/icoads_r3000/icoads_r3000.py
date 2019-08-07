@@ -119,7 +119,8 @@ class mapping_functions():
         # !!!! set only for drifting buoys. Rest assumed ships!
         #return df[df.columns[0]].swifter.apply( lambda x: '{5,7,9}' if x == 7 else '{7,56}')
 
-    def string_add(self,ds,prepend = None,append = None, separator = None,zfill_col=None,zfill=None):
+
+    def string_add(self,ds,prepend = None,append = None, separator = None,zfill_col = None,zfill = None):
         prepend = '' if not prepend else prepend
         append = '' if not append else append
         separator = '' if not separator else separator
@@ -129,7 +130,7 @@ class mapping_functions():
         ds['string_add'] = np.vectorize(string_add_i)(prepend,ds,append,separator)
         return ds['string_add']
 
-    def string_join_add(self,df,prepend = None,append = None, separator = None,zfill_col=None,zfill=None):
+    def string_join_add(self,df,prepend = None,append = None, separator = None,zfill_col = None,zfill = None):
         separator = '' if not separator else separator
         if zfill_col and zfill:
             for col,width in zip(zfill_col,zfill):

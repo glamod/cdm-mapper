@@ -123,13 +123,17 @@ class mapping_functions():
         prepend = '' if not prepend else prepend
         append = '' if not append else append
         separator = '' if not separator else separator
+        if zfill_col and zfill:
+            for col,width in zip(zfill_col,zfill):
+                df.iloc[:,col] = df.iloc[:,col].astype(str).str.zfill(width)
         ds['string_add'] = np.vectorize(string_add_i)(prepend,ds,append,separator)
         return ds['string_add']
 
     def string_join_add(self,df,prepend = None,append = None, separator = None,zfill_col=None,zfill=None):
         separator = '' if not separator else separator
-        for col,width in zip(zfill_col,zfill):
-            df[col] = df[col].astype(str).str.zfill(width)
+        if zfill_col and zfill:
+            for col,width in zip(zfill_col,zfill):
+                df.iloc[:,col] = df.iloc[:,col].astype(str).str.zfill(width)
         joint = mapping_functions(self.atts).df_col_join(df,separator)
         df['string_add'] = np.vectorize(string_add_i)(prepend,joint,append,separator)
         return df['string_add']

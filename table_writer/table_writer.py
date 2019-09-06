@@ -92,7 +92,7 @@ def print_varchar_array_i(row,null_label = None):
     if row==row:
         row = eval(row)
         row = row if isinstance(row,list) else [row]
-        string = ','.join(filter(bool,x))
+        string = ','.join(filter(bool,row))
         if len(string) > 0:
             return '{' + string + '}'
         else:

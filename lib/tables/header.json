@@ -114,7 +114,7 @@
         "data_type": "timestamp with timezone"
     },
     "history": {
-        "data_type": "varchar"
+        "data_type": "varchar[]"
     },
     "processing_level": {
         "data_type": "int"

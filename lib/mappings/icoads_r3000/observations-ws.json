@@ -56,16 +56,20 @@
     "units": {
         "default": "731"
     },
+    "conversion_flag": {
+        "default": 2
+    },
     "location_precision": {
         "sections": "core",
         "elements": ["LI","LAT"],
-        "transform": "location_accuracy"
+        "transform": "location_accuracy",
+        "decimal_places":0
     },
     "spatial_representativeness": {
         "default": 3
     },
     "quality_flag": {
-        "default": 3
+        "default": 2
     },
     "numerical_precision": {
     },
@@ -84,9 +88,6 @@
         "sections": "core",
         "elements": "W",
         "decimal_places": "decimal_places"
-    },
-    "conversion_method": {
-        "default": 1
     },
     "processing_level": {
         "default": 3

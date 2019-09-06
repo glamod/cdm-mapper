@@ -103,6 +103,8 @@ class mapping_functions():
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
         return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])
 
+    def lineage():
+        return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ", Initial conversion from ICOADS R3.0.0T with supplemental data recovery"
 
     def observing_programme(self,ds):
         op = { str(i):[5,7,56] for i in range(0,6) }

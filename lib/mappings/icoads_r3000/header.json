@@ -22,7 +22,6 @@
     "platform_type": {
         "sections": "c1",
         "elements": "PT",
-        "fill_value": 2,
         "code_table": "platform_type"
     },
     "platform_sub_type": {
@@ -57,14 +56,20 @@
     "location_accuracy": {
         "sections": "core",
         "elements": ["LI","LAT"],
-        "transform": "location_accuracy"
+        "transform": "location_accuracy",
+        "decimal_places": 0
+    },
+    "location_quality": {
+        "default": 3
     },
     "crs": {
         "default": 0
     },
     "station_speed": {
         "sections": "core",
-        "elements": "VS"
+        "elements": ["YR","VS"],
+        "code_table": "ship_speed_ms",
+        "decimal_places":1
     },
     "station_course": {
         "sections": "core",
@@ -92,7 +97,11 @@
     "report_time_accuracy": {
         "sections": "core",
         "elements": "TI",
-        "transform": "time_accuracy"
+        "transform": "time_accuracy",
+        "decimal_places":0
+    },
+    "report_time_quality":{
+        "default":2
     },
     "report_quality": {
         "sections": "c98",
@@ -106,7 +115,7 @@
         "transform": "datetime_utcnow"
     },
     "history": {
-        "default": "Initial conversion from IMMA"
+        "transform": "lineage"
     },
     "source_id": {
         "sections":["c1","c1","core","core"],

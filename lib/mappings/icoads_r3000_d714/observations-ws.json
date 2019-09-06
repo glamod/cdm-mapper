@@ -57,18 +57,19 @@
         "default": "731"
     },
     "conversion_flag": {
-        "default": 0
+        "default": 2
     },
     "location_precision": {
         "sections": ["core","c99"],
         "elements": ["LI","Lat"],
-        "transform": "location_accuracy"
+        "transform": "location_accuracy",
+        "decimal_places":0
     },
     "spatial_representativeness": {
         "default": 3
     },
     "quality_flag": {
-        "default": 3
+        "default": 2
     },
     "numerical_precision": {
     },

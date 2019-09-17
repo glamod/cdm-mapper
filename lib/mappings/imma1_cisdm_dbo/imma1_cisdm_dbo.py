@@ -103,11 +103,9 @@ class mapping_functions():
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
         return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])
 
-    def lineage(self,ds):
-        return '"' + datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T with supplemental data recovery" + '\"'
 
     def observing_programme(self,ds):
-        op = { str(i):[5,7,56] for i in range(0,6) }
+        op = { str(i):[7, 56] for i in range(0,6) }
         op.update({'7':[5,7,9]})
         return ds.map( op, na_action = 'ignore' )
         # Previous version:
@@ -116,21 +114,15 @@ class mapping_functions():
         # !!!! set only for drifting buoys. Rest assumed ships!
         #return df[df.columns[0]].swifter.apply( lambda x: '{5,7,9}' if x == 7 else '{7,56}')
 
-    def string_add(self,ds,prepend = None,append = None, separator = None,zfill_col = None,zfill = None):
+    def string_add(self,ds,prepend = None,append = None, separator = None):
         prepend = '' if not prepend else prepend
         append = '' if not append else append
         separator = '' if not separator else separator
-        if zfill_col and zfill:
-            for col,width in zip(zfill_col,zfill):
-                df.iloc[:,col] = df.iloc[:,col].astype(str).str.zfill(width)
         ds['string_add'] = np.vectorize(string_add_i)(prepend,ds,append,separator)
         return ds['string_add']
 
-    def string_join_add(self,df,prepend = None,append = None, separator = None,zfill_col = None,zfill = None):
+    def string_join_add(self,df,prepend = None,append = None, separator = None):
         separator = '' if not separator else separator
-        if zfill_col and zfill:
-            for col,width in zip(zfill_col,zfill):
-                df.iloc[:,col] = df.iloc[:,col].astype(str).str.zfill(width)
         joint = mapping_functions(self.atts).df_col_join(df,separator)
         df['string_add'] = np.vectorize(string_add_i)(prepend,joint,append,separator)
         return df['string_add']

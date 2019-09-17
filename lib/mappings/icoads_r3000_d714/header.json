@@ -77,10 +77,12 @@
         "decimal_places": 0
     },
     "height_of_station_above_local_ground": {
-        "default": 0
+        "default": 0,
+        "decimal_places":1
     },
     "height_of_station_above_sea_level": {
-        "default": 0
+        "default": 0,
+        "decimal_places":1
     },
     "report_meaning_of_timestamp": {
         "default": 2
@@ -114,6 +116,8 @@
         "transform": "datetime_utcnow"
     },
     "history": {
+        "sections": "core",
+        "elements": "YR",
         "transform": "lineage"
     },
     "source_id": {

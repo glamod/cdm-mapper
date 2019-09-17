@@ -3,7 +3,7 @@
         "sections": "c98",
         "elements": "UID",
         "transform": "string_add",
-        "kwargs":{"prepend":"ICOADS-30","append":"SLP","separator":"-"}
+        "kwargs":{"prepend":"ICOADS-30","append":"SST","separator":"-"}
     },
     "report_id": {
         "sections": "c98",
@@ -26,14 +26,14 @@
         "default": 8
     },
     "longitude": {
-        "sections": "core",
-        "elements": "LON",
-        "transform": "longitude_360to180",
+        "sections": "c99",
+        "elements": "Lon",
+        "transform": "float_opposite",
         "decimal_places": "decimal_places"
     },
     "latitude": {
-        "sections": "core",
-        "elements": "LAT",
+        "sections": "c99",
+        "elements": "Lat",
         "decimal_places": "decimal_places"
     },
     "crs": {
@@ -43,35 +43,33 @@
         "default": 0
     },
     "observed_variable": {
-        "default": 58
+        "default": 95
     },
     "observation_value": {
-        "sections": "core",
-        "elements": "SLP",
-        "transform": "float_scale",
-        "kwargs":{"factor":100},
-        "decimal_places": "decimal_places_pressure_pascal"
+        "sections": "c99",
+        "elements": "SST",
+        "transform": "temperature_celsius_to_kelvin",
+        "decimal_places": "decimal_places_temperature_kelvin"
     },
     "value_significance": {
         "default": 2
     },
     "units": {
-        "default": 32
+        "default": 5
     },
     "conversion_flag": {
         "default": 0
     },
     "location_precision": {
-        "sections": "core",
-        "elements": ["LI","LAT"],
-        "transform": "location_accuracy",
-        "decimal_places":0
+        "sections": ["core","c99"],
+        "elements": ["LI","Lat"],
+        "transform": "location_accuracy"
     },
     "spatial_representativeness": {
         "default": 3
     },
     "quality_flag": {
-        "default": 2
+        "default": 3
     },
     "numerical_precision": {
     },
@@ -84,15 +82,15 @@
     "original_precision": {
     },
     "original_units": {
-        "default": 530
+        "default": 60
     },
     "original_value": {
-        "sections": "core",
-        "elements": "SLP",
+        "sections": "c99",
+        "elements": "SST",
         "decimal_places":"decimal_places"
     },
     "conversion_method": {
-        "default": 7
+        "default": 1
     },
     "processing_level": {
         "default": 3
@@ -113,6 +111,6 @@
         "sections":["c1","c1","core","core"],
         "elements": ["SID","DCK","YR","MO"],
         "transform": "string_join_add",
-        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-","zfill_col":[0,3],"zfill":[3,2]}
+        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-"}
     }
 }

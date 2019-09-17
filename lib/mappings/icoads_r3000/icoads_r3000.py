@@ -102,8 +102,8 @@ class mapping_functions():
     def integer_to_float(self,ds,float_type = 'float32'):
         return ds.astype(float_type)
 
-    def lineage():
-        return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ", Initial conversion from ICOADS R3.0.0T"
+    def lineage(self,ds):
+        return '"' + datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T" + '\"'
 
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
         return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])

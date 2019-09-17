@@ -3,7 +3,7 @@
         "sections": "c98",
         "elements": "UID",
         "transform": "string_add",
-        "kwargs":{"prepend":"ICOADS-30","append":"SLP","separator":"-"}
+        "kwargs":{"prepend":"ICOADS-30","append":"WD","separator":"-"}
     },
     "report_id": {
         "sections": "c98",
@@ -43,20 +43,20 @@
         "default": 0
     },
     "observed_variable": {
-        "default": 58
+        "default": 106
     },
     "observation_value": {
         "sections": "core",
-        "elements": "SLP",
-        "transform": "float_scale",
-        "kwargs":{"factor":100},
-        "decimal_places": "decimal_places_pressure_pascal"
+        "elements": "D",
+        "transform": "integer_to_float",
+        "kwargs":{"float_type":"float16"},
+        "decimal_places": 0
     },
     "value_significance": {
         "default": 2
     },
     "units": {
-        "default": 32
+        "default": 110
     },
     "conversion_flag": {
         "default": 0
@@ -64,14 +64,13 @@
     "location_precision": {
         "sections": "core",
         "elements": ["LI","LAT"],
-        "transform": "location_accuracy",
-        "decimal_places":0
+        "transform": "location_accuracy"
     },
     "spatial_representativeness": {
         "default": 3
     },
     "quality_flag": {
-        "default": 2
+        "default": 3
     },
     "numerical_precision": {
     },
@@ -84,15 +83,17 @@
     "original_precision": {
     },
     "original_units": {
-        "default": 530
+        "default": 110
     },
     "original_value": {
         "sections": "core",
-        "elements": "SLP",
-        "decimal_places":"decimal_places"
+        "elements": "D",
+        "transform": "integer_to_float",
+        "kwargs":{"float_type":"float16"},
+        "decimal_places": 0
     },
     "conversion_method": {
-        "default": 7
+        "default": 1
     },
     "processing_level": {
         "default": 3
@@ -113,6 +114,6 @@
         "sections":["c1","c1","core","core"],
         "elements": ["SID","DCK","YR","MO"],
         "transform": "string_join_add",
-        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-","zfill_col":[0,3],"zfill":[3,2]}
+        "kwargs":{"prepend":"ICOADS-3-0-0T","separator":"-"}
     }
 }

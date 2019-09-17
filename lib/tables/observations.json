@@ -51,7 +51,7 @@
         "data_type": "int"
     },
     "units": {
-        "data_type": "varchar"
+        "data_type": "int"
     },
     "code_table": {
         "data_type": "int"
@@ -102,7 +102,7 @@
         "data_type": "numeric"
     },
     "original_units": {
-        "data_type": "varchar"
+        "data_type": "int"
     },
     "original_code_table": {
         "data_type": "int"

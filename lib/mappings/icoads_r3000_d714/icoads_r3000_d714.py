@@ -104,7 +104,7 @@ class mapping_functions():
         return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])
 
     def lineage(self,ds):
-        return '"' + datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T with supplemental data recovery" + '\"'
+        return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T with supplemental data recovery"
 
     def observing_programme(self,ds):
         op = { str(i):[5,7,56] for i in range(0,6) }

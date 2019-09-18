@@ -101,7 +101,8 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                     notna_idx += idata.index[0] # to account for parsers
                     if len(elements) == 1:
                         to_map = to_map.iloc[:,0]
-                if transform:
+                    isEmpty = True if len(to_map) == 0 else False
+                if transform and not isEmpty:
                     kwargs = {} if not kwargs else kwargs
                     logger.debug('\tkwargs: {}'.format(",".join(list(kwargs.keys()))))
                     trans = eval('imodel_functions.' + transform)
@@ -110,7 +111,7 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                         table_df_i.loc[notna_idx,cdm_key] = trans(to_map,**kwargs)
                     else:
                         table_df_i[cdm_key] = trans(**kwargs)
-                elif code_table:
+                elif code_table and not isEmpty:
 #                    https://stackoverflow.com/questions/45161220/how-to-map-a-pandas-dataframe-column-to-a-nested-dictionary?rq=1
 #                    Approach that does not work when it is not nested...so just try and assume not nested if fails
                     # Prepare code_table
@@ -125,7 +126,7 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                     except:
                         pass
                     table_df_i[cdm_key] = to_map.astype(str).join(s, on=elements)['cdm'] # here indexes well inherited as opposed to trans() above
-                elif elements:
+                elif elements and not isEmpty:
                     table_df_i[cdm_key] = to_map
                 elif default is not None: #(vakue = 0 evals to False!!)
                     if isinstance(default,list):

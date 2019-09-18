@@ -38,9 +38,9 @@
     },
     "primary_station_id_scheme": {
         "sections": "c1",
-        "elements": "PT",
+        "elements": ["DCK","SID"],
         "fill_value": 5,
-        "code_table": "primary_station_id_scheme"
+        "code_table": "primary_station_id_scheme_new"
     },
     "longitude": {
         "sections": "core",

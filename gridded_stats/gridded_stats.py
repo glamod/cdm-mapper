@@ -49,6 +49,8 @@ DEGREE_FACTOR_RESOLUTION['hi_res'] = 5
 # To define aggregationa
 DS_AGGREGATIONS = {'counts':ds.count,'max':ds.max,'min':ds.min, 'mean':ds.mean}
 AGGREGATIONS = ['counts','max','min','mean']
+DS_AGGREGATIONS_HDR = {'counts':ds.count}
+AGGREGATIONS_HDR = ['counts']
 # TO output nc
 ENCODINGS = {'latitude': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
              'longitude': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
@@ -56,13 +58,20 @@ ENCODINGS = {'latitude': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': 
              'max': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
              'min': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
              'mean': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999}}
+ENCODINGS_HDR = {'latitude': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
+             'longitude': {'dtype': 'int16', 'scale_factor': 0.01, '_FillValue': -99999},
+             'counts': {'dtype': 'int32','_FillValue': -99999}}
 # To read tables
 CDM_DTYPES = {'latitude':'float32','longitude':'float32',
               'observation_value':'float32','date_time':'object',
-              'quality_flag':'int8'}
+              'quality_flag':'int8','crs':'int'}
 READ_COLS = ['latitude','longitude','observation_value','date_time',
                  'quality_flag']
 DTYPES = { x:CDM_DTYPES.get(x) for x in READ_COLS }
+
+READ_COLS_HDR = ['latitude','longitude','crs','report_timestamp']
+DTYPES_HDR = { x:CDM_DTYPES.get(x) for x in READ_COLS }
+
 DELIMITER = '|'
 
 
@@ -82,6 +91,36 @@ def from_cdm_monthly(dir_data, cdm_id = None, region = 'Global',
     
     logging.basicConfig(format='%(levelname)s\t[%(asctime)s](%(filename)s)\t%(message)s',
                     level=logging.INFO,datefmt='%Y%m%d %H:%M:%S',filename=None)
+    
+    canvas = create_canvas(REGIONS.get(region),DEGREE_FACTOR_RESOLUTION.get(resolution)) 
+    
+    table = 'header'
+    logging.info('Processing table {}'.format(table))
+    table_file = os.path.join(dir_data,'-'.join([table,cdm_id]) + '.psv')
+    if not os.path.isfile(table_file):
+        logging.error('Table file not found {}'.format(table_file))
+        return
+    df = pd.read_csv(table_file,delimiter=DELIMITER,usecols = READ_COLS_HDR,
+                     parse_dates=['report_timestamp'],dtype=DTYPES_HDR)
+    try:
+        date_time = datetime.datetime(df['report_timestamp'][0].year,df['report_timestamp'][0].month,1)
+    except Exception:
+        fields = cdm_id.split('-')
+        date_time = datetime.datetime(int(fields[0]),int(fields[1]),1)
+    # Aggregate on to and aggregate to a dict
+    xarr_dict = { x:'' for x in AGGREGATIONS_HDR }
+    for agg in AGGREGATIONS_HDR:
+        xarr_dict[agg] = canvas.points(df, 'longitude','latitude',
+                         DS_AGGREGATIONS_HDR.get(agg)('crs'))
+    # Merge aggs in a single xarr
+    xarr = xr.merge([ v.rename(k) for k,v in xarr_dict.items()])
+    xarr.expand_dims(**{'time':[date_time]})
+    xarr.encoding = ENCODINGS_HDR 
+    # Save to nc
+    nc_dir = dir_data if not nc_dir else nc_dir 
+    nc_name = '-'.join([table,cdm_id]) + '.nc' 
+    xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS_HDR,mode='w')
+        
     obs_tables = [ x for x in properties.cdm_tables if x != 'header' ]
     for table in obs_tables:
         logging.info('Processing table {}'.format(table))
@@ -94,9 +133,12 @@ def from_cdm_monthly(dir_data, cdm_id = None, region = 'Global',
                          parse_dates=['date_time'],dtype=DTYPES)
         if qc:
             df = df.loc[df['quality_flag'] == 0]
-        date_time = datetime.datetime(df['date_time'][0].year,df['date_time'][0].month,1)
-        # Create the canvas to aggregate on to and aggregate to a dict
-        canvas = create_canvas(REGIONS.get(region),DEGREE_FACTOR_RESOLUTION.get(resolution))  
+        try:
+            date_time = datetime.datetime(df['date_time'][0].year,df['date_time'][0].month,1)
+        except Exception:
+            fields = cdm_id.split('-')
+            date_time = datetime.datetime(int(fields[0]),int(fields[1]),1)
+        # Aggregate on to and aggregate to a dict
         xarr_dict = { x:'' for x in AGGREGATIONS }
         for agg in AGGREGATIONS:
             xarr_dict[agg] = canvas.points(df, 'longitude','latitude',
@@ -116,6 +158,27 @@ def merge_from_monthly_nc(dir_data, cdm_id = None, nc_dir = None):
     
     logging.basicConfig(format='%(levelname)s\t[%(asctime)s](%(filename)s)\t%(message)s',
                     level=logging.INFO,datefmt='%Y%m%d %H:%M:%S',filename=None)
+    table = 'header'
+    logging.info('Processing table {}'.format(table))
+    pattern = '-'.join([table,'*',cdm_id]) + '.nc'      
+    all_files = glob.glob(os.path.join(dir_data,pattern))
+    if len(all_files) == 0:
+         logging.error('No nc files found {}'.format(pattern)) 
+         return
+    all_files.sort()
+    # Read all files to a single dataset
+    dataset = xr.open_mfdataset(all_files,concat_dim='time')
+    # Aggregate each aggregation correspondingly....
+    merged = {}
+    merged['counts'] = dataset['counts'].sum(dim='time',skipna=True)
+    # Merge aggregations to a single xarr
+    xarr = xr.merge([ v.rename(k) for k,v in merged.items()])
+    xarr.encoding = ENCODINGS_HDR 
+    # Save to nc
+    nc_dir = dir_data if not nc_dir else nc_dir 
+    nc_name = '-'.join([table,cdm_id]) + '.nc' 
+    xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS_HDR)
+    
     obs_tables = [ x for x in properties.cdm_tables if x != 'header' ]
     for table in obs_tables:
         logging.info('Processing table {}'.format(table))

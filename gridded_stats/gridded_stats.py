@@ -36,6 +36,7 @@ from cdm import properties
 import datetime
 import logging
 import glob
+import time
 
 
 # SOME COMMON PARAMS ----------------------------------------------------------
@@ -150,8 +151,15 @@ def from_cdm_monthly(dir_data, cdm_id = None, region = 'Global',
         # Save to nc
         nc_dir = dir_data if not nc_dir else nc_dir 
         nc_name = '-'.join([table,cdm_id]) + '.nc' 
-        xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS,mode='w')
-    
+        try:
+            xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS,mode='w')
+        except Exception as e:
+            logging.info('Error saving nc:')
+            logging.info(e)
+            logging.info('Retrying in 6 seconds...')
+            time.sleep(6)
+            xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS,mode='w')
+            
     return
 
 def merge_from_monthly_nc(dir_data, cdm_id = None, nc_dir = None):
@@ -202,7 +210,7 @@ def merge_from_monthly_nc(dir_data, cdm_id = None, nc_dir = None):
         # Save to nc
         nc_dir = dir_data if not nc_dir else nc_dir 
         nc_name = '-'.join([table,cdm_id]) + '.nc' 
-        xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS)
+        xarr.to_netcdf(os.path.join(nc_dir,nc_name),encoding = ENCODINGS,mode='w')
     return
 
 def global_from_cdm_monthly():

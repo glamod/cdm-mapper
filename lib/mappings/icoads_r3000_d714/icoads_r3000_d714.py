@@ -27,7 +27,6 @@ import numpy as np
 import pandas as pd
 import datetime
 
-
 def location_accuracy_i(li,lat):
     #    math.sqrt(111**2)=111.0
     #    math.sqrt(2*111**2)=156.97770542341354
@@ -37,6 +36,7 @@ def location_accuracy_i(li,lat):
     deg_km = 111
     accuracy = degrees.get(int(li), np.nan)*math.sqrt((deg_km**2)*( 1 + math.cos(math.radians(lat))**2))
     return np.nan if np.isnan(accuracy) else max(1,int(round(accuracy)))
+
 
 def string_add_i(a,b,c,sep):
     if b:
@@ -99,9 +99,10 @@ class mapping_functions():
 
     def integer_to_float(self,ds,float_type = 'float32'):
         return ds.astype(float_type)
-
+  
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
-        return np.vectorize(location_accuracy_i)(df.iloc[:,0], df.iloc[:,1])
+        la = np.vectorize(location_accuracy_i,otypes='f')(df.iloc[:,0], df.iloc[:,1])#last minute tweak so that is does no fail on nans!
+        return la
 
     def lineage(self,ds):
         return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T with supplemental data recovery"

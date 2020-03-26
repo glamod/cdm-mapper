@@ -133,9 +133,9 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                         table_df_i[cdm_key] = [default]*len(table_df_i.index)
                     else:
                         table_df_i[cdm_key] = default
-                else:
-                    if fill_value is None:
-                        logger.warning('Nothing defined for cdm element {}'.format(cdm_key))
+#                else:
+#                    if fill_value is None:
+#                        logger.warning('Nothing defined for cdm element {}'.format(cdm_key))
 
                 if fill_value is not None:
                     table_df_i[cdm_key].fillna(value = fill_value,inplace = True)

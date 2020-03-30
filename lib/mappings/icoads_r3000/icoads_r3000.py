@@ -136,11 +136,19 @@ class mapping_functions():
 
     def string_join_add(self,df,prepend = None,append = None, separator = None,zfill_col = None,zfill = None):
         separator = '' if not separator else separator
+        # This duplication is to prevent error in Int to object casting of types
+        # when nrows ==1, shown after introduction of nullable integers in objects.
+        duplicated = False
+        if len(df) == 1:
+            df = pd.concat([df,df])
+            duplicated = True
         if zfill_col and zfill:
             for col,width in zip(zfill_col,zfill):
                 df.iloc[:,col] = df.iloc[:,col].astype(str).str.zfill(width)
         joint = mapping_functions(self.atts).df_col_join(df,separator)
         df['string_add'] = np.vectorize(string_add_i)(prepend,joint,append,separator)
+        if duplicated:
+            df = df.iloc[0,:]
         return df['string_add']
 
     def temperature_celsius_to_kelvin(self,ds):

@@ -148,7 +148,7 @@ class mapping_functions():
         joint = mapping_functions(self.atts).df_col_join(df,separator)
         df['string_add'] = np.vectorize(string_add_i)(prepend,joint,append,separator)
         if duplicated:
-            df = df.iloc[0,:]
+            df = df[:-1]
         return df['string_add']
 
     def temperature_celsius_to_kelvin(self,ds):

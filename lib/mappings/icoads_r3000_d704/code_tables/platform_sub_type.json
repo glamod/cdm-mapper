@@ -1,9 +1,9 @@
 {
- "01":"ship",
- "02":"bark or barque",
- "03":"barkentine or barquentine",
- "04":"brigantine",
- "05":"schooner",
- "06":"frigate",
- "99":"not identified"
+ "01":18,
+ "02":105,
+ "03":106,
+ "04":107,
+ "05":108,
+ "06":109,
+ "99":18
 }

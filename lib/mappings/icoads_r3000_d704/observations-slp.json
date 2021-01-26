@@ -79,12 +79,6 @@
     },
     "numerical_precision": {
     },
-    "sensor_id": {
-        "sections": "c99_journal",
-        "elements": "baro_type",
-        "code_table": "baro_type",
-        "decimal_places": "decimal_places"
-    },
     "sensor_automation_status": {
         "default": 5
     },
@@ -96,7 +90,8 @@
     "original_units": {
         "sections": "c99_journal",
         "elements": "baro_units",
-        "code_table":"baro_units"
+        "code_table": "baro_units",
+        "fill_value": 9999
     },
     "original_value": {
         "sections": "core",

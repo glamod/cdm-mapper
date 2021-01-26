@@ -89,13 +89,6 @@ def string_add_i(a, b, c, sep):
     else:
         return
 
-
-def get_slp_sensor_height(ind, slp):
-    list_units = ['1', '2', '3', '4', '5']
-    list_barotype = ['1', '2']
-    return slp
-
-
 class mapping_functions():
     def __init__(self, atts):
         self.atts = atts

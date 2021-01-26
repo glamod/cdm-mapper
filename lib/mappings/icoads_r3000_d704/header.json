@@ -20,8 +20,8 @@
         "default": 2
     },
     "platform_type": {
-        "sections": "c99_journal",
-        "elements": "vessel_type",
+        "sections": "c1",
+        "elements": "PT",
         "code_table": "platform_type"
     },
     "platform_sub_type": {

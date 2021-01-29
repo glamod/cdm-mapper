@@ -237,5 +237,6 @@ class mapping_functions():
         secs = {'0': 3600, '1': int(round(3600 / 10)), '2': int(round(3600 / 60)), '3': int(round(3600 / 100))}
         return ds.map(secs, na_action='ignore')
 
-    def feet_to_m(self, ds):
-        return ds/3.2808
+    def feet_to_m(self, ds, float_type='float32'):
+        ds.astype(float_type)
+        return np.round(ds/3.2808, 2)

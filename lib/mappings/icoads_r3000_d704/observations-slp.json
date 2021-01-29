@@ -40,11 +40,14 @@
     "crs": {
         "default": 0
     },
-    "z_coordinate_type": {
+    "z_coordinate": {
         "sections": "c99_journal",
         "elements": "baro_height",
         "transform": "feet_to_m",
         "decimal_places": 2
+    },
+    "z_coordinate_type": {
+        "default": 0
     },
     "observed_variable": {
         "default": 58

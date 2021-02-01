@@ -49,6 +49,12 @@
     "z_coordinate_type": {
         "default": 0
     },
+    "observation_height_above_station_surface": {
+        "sections": "c99_journal",
+        "elements": "baro_height",
+        "transform": "feet_to_m",
+        "decimal_places": 2
+    },
     "observed_variable": {
         "default": 58
     },

@@ -16,6 +16,10 @@
     "report_type": {
         "default": 0
     },
+    "station_name": {
+        "sections": "c99_journal",
+        "elements": "ship_name"
+    },
     "station_type": {
         "default": 2
     },

@@ -26,15 +26,14 @@
         "default": 8
     },
     "longitude": {
-        "sections": "c99_data",
-        "elements": ["lon_deg_an","lon_min_an","lon_hemis_an"],
-        "transform": "coord_dmh_to_180",
+        "sections": "core",
+        "elements": "LON",
+        "transform": "longitude_360to180",
         "decimal_places": "decimal_places"
     },
     "latitude": {
-        "sections": "c99_data",
-        "elements": ["lat_deg_an","lat_min_an","lat_hemis_an"],
-        "transform": "coord_dmh_to_90",
+        "sections": "core",
+        "elements": "LAT",
         "decimal_places": "decimal_places"
     },
     "crs": {
@@ -61,10 +60,10 @@
         "default": 2
     },
     "location_precision": {
-        "sections": ["core", "c99_data", "c99_data", "c99_data"],
-        "elements": ["LI", "lat_deg_an","lat_min_an", "lat_hemis_an"],
+        "sections": "core",
+        "elements": ["LI","LAT"],
         "transform": "location_accuracy",
-        "decimal_places": "decimal_places"
+        "decimal_places":0
     },
     "spatial_representativeness": {
         "default": 3

@@ -50,22 +50,21 @@
         "code_table": "primary_station_id_scheme"
     },
     "longitude": {
-        "sections": "c99_data",
-        "elements": ["lon_deg_an","lon_min_an","lon_hemis_an"],
-        "transform": "coord_dmh_to_180",
+        "sections": "core",
+        "elements": "LON",
+        "transform": "longitude_360to180",
         "decimal_places": "decimal_places"
     },
     "latitude": {
-        "sections": "c99_data",
-        "elements": ["lat_deg_an","lat_min_an","lat_hemis_an"],
-        "transform": "coord_dmh_to_90",
+        "sections": "core",
+        "elements": "LAT",
         "decimal_places": "decimal_places"
     },
     "location_accuracy": {
-        "sections": ["core", "c99_data", "c99_data", "c99_data"],
-        "elements": ["LI", "lat_deg_an","lat_min_an", "lat_hemis_an"],
+        "sections": "core",
+        "elements": ["LI","LAT"],
         "transform": "location_accuracy",
-        "decimal_places": "decimal_places"
+        "decimal_places": 0
     },
     "location_quality": {
         "default": 3

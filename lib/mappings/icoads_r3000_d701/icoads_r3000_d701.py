@@ -192,16 +192,17 @@ class mapping_functions():
         lat = coord_dmh_to_90i(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2])
         return lat
 
-    def location_accuracy(self, df):
-        # (li_core,lat_core) math.radians(lat_core)
-        lat = coord_dmh_to_90i(df.iloc[:, 1], df.iloc[:, 2], df.iloc[:, 3])
-        la = np.vectorize(location_accuracy_i, otypes='f')(df.iloc[:, 0],
-                                                           lat)  # last minute tweak so that is does no fail on nans!
-        return la
-
-    # def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
-    #     la = np.vectorize(location_accuracy_i,otypes='f')(df.iloc[:,0], df.iloc[:,1])#last minute tweak so that is does no fail on nans!
+    # def location_accuracy(self, df):
+    #     print(df)
+    #     # (li_core,lat_core) math.radians(lat_core)
+    #     lat = coord_dmh_to_90i(df.iloc[:, 1], df.iloc[:, 2], df.iloc[:, 3])
+    #     la = np.vectorize(location_accuracy_i, otypes='f')(df.iloc[:, 0],
+    #                                                        lat)  # last minute tweak so that is does no fail on nans!
     #     return la
+
+    def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
+        la = np.vectorize(location_accuracy_i,otypes='f')(df.iloc[:,0], df.iloc[:,1])#last minute tweak so that is does no fail on nans!
+        return la
 
     def longitude_360to180(self,ds):
         lon = np.vectorize(longitude_360to180_i)(ds)

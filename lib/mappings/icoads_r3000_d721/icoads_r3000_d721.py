@@ -73,40 +73,6 @@ class mapping_functions():
     def datetime_utcnow(self):
         return datetime.datetime.utcnow()
 
-    def datetime_to_cdm_time(self, dates):
-        """
-        Converts year, month, day and time indicator to
-        a datetime obj with a 24hrs format '%Y-%m-%d-%H'
-        Parameters
-        ----------
-        dates: list of elements from a date array
-        Returns
-        -------
-        date: datetime obj
-        """
-
-        # Arranging the hour
-        dates.iloc[:, 3] = dates.iloc[:, 3].apply("{0:0=2d}".format) + ':00' + ':00'
-        dates.iloc[:, -1] = dates.iloc[:, -1].apply(lambda x: 'AM' if x == '1' else 'PM')
-        time_string = [x + ' ' + y for x, y in zip(dates.iloc[:, 3], dates.iloc[:, -1])]
-
-        hours = []
-        minutes = []
-        for item in time_string:
-            time_string = pd.to_datetime(item).strftime('%H:%M:%S')
-            time_obj = datetime.datetime.strptime(time_string, '%H:%M:%S')
-            hours = np.array(np.append(hours, time_obj.hour), np.int16)
-            minutes = np.append(minutes, time_obj.minute)
-
-        dates.iloc[:, 3] = hours
-        dates.iloc[:, -1] = minutes
-
-        date_format = "%Y-%m-%d-%H"
-        data = pd.to_datetime(dates.iloc[:, 0:4].astype(str).apply("-".join, axis=1).values,
-                              format=date_format, errors='coerce')
-
-        return data
-
     def decimal_places(self,element):
         return self.atts.get(element[0]).get('decimal_places')
 

@@ -15,9 +15,9 @@
         "default": 0
     },
     "date_time": {
-       "sections": ["c99_data", "c99_data", "c99_data", "c99_data", "c99_data"],
-        "elements": ["year", "month", "day", "hour", "hour_ind"],
-        "transform": "datetime_to_cdm_time"
+        "sections": "core",
+        "elements": ["YR","MO","DY","HR"],
+        "transform": "datetime_imma1"
     },
     "date_time_meaning": {
         "default": 2

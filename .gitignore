@@ -3,3 +3,4 @@ docs/notebooks/.ipynb_checkpoints/
 /**/.DS_Store
 /**/*.py[cod]
 /**/__pycache__
+docs/_build/

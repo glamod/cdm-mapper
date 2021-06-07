@@ -82,11 +82,10 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
             logger.debug('Table: {}'.format(table))
             for cdm_key,imapping in mapping.items():
                 logger.debug('\tElement: {}'.format(cdm_key))
-                [elements,transform,kwargs,code_table,default,fill_value, decimal_places, nan_filter] = [imapping.get('elements'),
+                [elements,transform,kwargs,code_table,default,fill_value, decimal_places] = [imapping.get('elements'),
                                                             imapping.get('transform'),imapping.get('kwargs'),
                                                             imapping.get('code_table'),imapping.get('default'),
-                                                            imapping.get('fill_value'), imapping.get('decimal_places'),
-                                                                                             imapping.get('nan_filter')]
+                                                            imapping.get('fill_value'), imapping.get('decimal_places')]
 
                 if elements:
                     # make sure they are clean and conform to their atts (tie dtypes)
@@ -97,10 +96,7 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                         logger.warning('Following elements from data model missing from input data: {0} to map {1} '.format(",".join([str(x) for x in missing_els]),cdm_key))
                         continue
                     to_map_types = { element:properties.pandas_dtypes.get('from_atts').get(data_atts.get(element).get('column_type')) for element in elements }
-                    if nan_filter == 'any':
-                        notna_idx = np.where(idata[elements].notna().any(axis=1))[0]
-                    else:
-                        notna_idx = np.where(idata[elements].notna().all(axis = 1))[0]
+                    notna_idx = np.where(idata[elements].notna().all(axis = 1))[0]
                     to_map = idata[elements].iloc[notna_idx].astype(to_map_types)
                     notna_idx += idata.index[0] # to account for parsers
                     if len(elements) == 1:

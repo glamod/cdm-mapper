@@ -15,12 +15,9 @@
         "default": 0
     },
     "date_time": {
-        "sections": ["c99_data4", "c99_data4", "c99_data4", "c99_data4", "c99_data4",
-                     "c99_data5", "c99_data5", "c99_data5", "c99_data5", "c99_data5"],
-        "elements": ["year", "month", "day", "hour", "time_ind",
-                     "year", "month", "day", "hour", "time_ind"],
-        "nan_filter": "any",
-        "transform": "datetime_to_cdm_time"
+        "sections": "core",
+        "elements": ["YR","MO","DY","HR"],
+        "transform": "datetime_imma1"
     },
     "date_time_meaning": {
         "default": 2
@@ -29,16 +26,15 @@
         "default": 8
     },
     "longitude": {
-        "sections": "c99_daily",
-        "elements": ["lon_deg_of", "lon_min_of", "lon_hemis_of"],
-        "transform": "coord_dmh_to_180",
-        "decimal_places": 2
+        "sections": "core",
+        "elements": "LON",
+        "transform": "longitude_360to180",
+        "decimal_places": "decimal_places"
     },
     "latitude": {
-        "sections": "c99_daily",
-        "elements": ["lat_deg_on", "lat_min_on", "lat_hemis_on"],
-        "transform": "coord_dmh_to_90",
-        "decimal_places": 2
+        "sections": "core",
+        "elements": "LAT",
+        "decimal_places": "decimal_places"
     },
     "crs": {
         "default": 0
@@ -50,11 +46,9 @@
         "default": 107
     },
     "observation_value": {
-        "sections": ["c99_data4", "c99_data5"],
-        "elements": ["wind_force", "wind_force"],
-        "nan_filter": "any",
-        "transform": "get_wind_speed_from_table",
-        "kwargs":{"scale":0}
+        "sections": "core",
+        "elements": "W",
+        "decimal_places": "decimal_places"
     },
     "value_significance": {
         "default": 2
@@ -66,10 +60,10 @@
         "default": 2
     },
     "location_precision": {
-        "sections": ["core", "c99_daily", "c99_daily", "c99_daily"],
-        "elements": ["LI", "lat_deg_on","lat_min_on", "lat_hemis_on"],
+        "sections": "core",
+        "elements": ["LI","LAT"],
         "transform": "location_accuracy",
-        "decimal_places": "decimal_places"
+        "decimal_places":0
     },
     "spatial_representativeness": {
         "default": 3

@@ -88,11 +88,6 @@
         "code_table": "at_units",
         "decimal_places":0
     },
-    "original_value": {
-        "sections": "core",
-        "elements": "AT",
-        "decimal_places":"decimal_places"
-    },
     "conversion_method": {
         "default": 1
     },

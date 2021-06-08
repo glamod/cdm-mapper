@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 docs/notebooks/.ipynb_checkpoints
 .idea
+=======
+.idea
+docs/notebooks/.ipynb_checkpoints/
+>>>>>>> e2be0d9b6c188b7b82ead7e4c6a42ffbb8f36d59
 /**/.DS_Store
 /**/*.py[cod]
 /**/__pycache__

@@ -26,16 +26,15 @@
         "default": 8
     },
     "longitude": {
-        "sections": "c99_daily",
-        "elements": ["lon_deg_of", "lon_min_of", "lon_hemis_of"],
-        "transform": "coord_dmh_to_180",
-        "decimal_places": 2
+        "sections": "core",
+        "elements": "LON",
+        "transform": "longitude_360to180",
+        "decimal_places": "decimal_places"
     },
     "latitude": {
-        "sections": "c99_daily",
-        "elements": ["lat_deg_on", "lat_min_on", "lat_hemis_on"],
-        "transform": "coord_dmh_to_90",
-        "decimal_places": 2
+        "sections": "core",
+        "elements": "LAT",
+        "decimal_places": "decimal_places"
     },
     "crs": {
         "default": 0
@@ -61,10 +60,10 @@
         "default": 2
     },
     "location_precision": {
-        "sections": ["core", "c99_daily", "c99_daily", "c99_daily"],
-        "elements": ["LI", "lat_deg_on","lat_min_on", "lat_hemis_on"],
+        "sections": "core",
+        "elements": ["LI","LAT"],
         "transform": "location_accuracy",
-        "decimal_places": "decimal_places"
+        "decimal_places":0
     },
     "spatial_representativeness": {
         "default": 3

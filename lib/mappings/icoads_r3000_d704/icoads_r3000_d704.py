@@ -28,48 +28,11 @@ import pandas as pd
 import datetime
 
 
-def coord_dmh_to_180i(deg, min, hemis):
-    """
-    Converts longitudes from degrees, minutes and hemisphere
-    to decimal degrees between -180 to 180.
-    Parameters
-    ----------
-    deg: longitude or latitude in degrees
-    min: logitude or latitude in minutes
-    hemis: Hemisphere W or E
-
-    Returns
-    var: longitude in decimal degrees
-    -------
-    """
-    hemisphere = 1
-    min_df = min / 60
-    if hemis.any() == 'W':
-        hemisphere = -1
-    var = np.round((deg + min_df), 2) * hemisphere
-    return var
-
-
-def coord_dmh_to_90i(deg, min, hemis):
-    """
-    Converts latitudes from degrees, minutes and hemisphere
-    to decimal degrees between -90 to 90.
-    Parameters
-    ----------
-    deg: longitude or latitude in degrees
-    min: logitude or latitude in minutes
-    hemis: Hemisphere N or S
-
-    Returns
-    var: latitude in decimal degrees
-    -------
-    """
-    hemisphere = 1
-    min_df = min / 60
-    if hemis.any() == 'S':
-        hemisphere = -1
-    var = np.round((deg + min_df), 2) * hemisphere
-    return var
+def longitude_360to180_i(lon):
+    if lon > 180:
+        return -180 + math.fmod(lon, 180)
+    else:
+        return lon
 
 
 def location_accuracy_i(li, lat):
@@ -89,6 +52,7 @@ def string_add_i(a, b, c, sep):
     else:
         return
 
+
 class mapping_functions():
     def __init__(self, atts):
         self.atts = atts
@@ -103,7 +67,7 @@ class mapping_functions():
         hours, minutes = np.vectorize(mapping_functions(self.atts).datetime_decimalhour_to_HM)(df.iloc[:, -1].values)
         # the mapping_functions(self.atts) does not look right, but otherwise it won't recognize things,
         # seems it need to be
-        # newly instantiated to be vectorized, ohhhhhhh, me lo estoy inventando, pero suena bien, jajajajaja
+        # newly instantiated to be vectorized
         df.drop(df.columns[len(df.columns) - 1], axis=1, inplace=True)
         df['H'] = hours
         df['M'] = minutes
@@ -146,48 +110,23 @@ class mapping_functions():
     def lineage(self, ds):
         return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T"
 
-    def coord_dmh_to_180(self, df):
-        """
-        Passing attributes and converting longitude to decimal degrees
-        Parameters
-        ----------
-        df: with longitude degree, min, hemisphere
-        Returns
-        lon: longitude in decimal degrees
-        -------
-        """
-        lon = coord_dmh_to_180i(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2])
-        return lon
-
-    def coord_dmh_to_90(self, df):
-        """
-        Passing attributes and converting latitude to decimal degrees
-        Parameters
-        ----------
-        df: with latitude degree, min, hemisphere
-        Returns
-        lat: latitude in decimal degrees
-        -------
-        """
-        lat = coord_dmh_to_90i(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2])
-        return lat
-
-    def location_accuracy(self, df):
-        # (li_core,lat_core) math.radians(lat_core)
-        lat = coord_dmh_to_90i(df.iloc[:, 1], df.iloc[:, 2], df.iloc[:, 3])
-        la = np.vectorize(location_accuracy_i, otypes='f')(df.iloc[:, 0],
-                                                           lat)  # last minute tweak so that is does no fail on nans!
+    def location_accuracy(self, df): # (li_core,lat_core) math.radians(lat_core)
+        la = np.vectorize(location_accuracy_i, otypes='f')(df.iloc[:, 0], df.iloc[:, 1])  # Last minute tweak so that
+        # is does no fail on nans!
         return la
+
+    def longitude_360to180(self, ds):
+        lon = np.vectorize(longitude_360to180_i)(ds)
+        return lon
 
     def observing_programme(self, ds):
         op = {str(i): [5, 7, 56] for i in range(0, 6)}
         op.update({'7': [5, 7, 9]})
         return ds.map(op, na_action='ignore')
         # Previous version:
-        # observing_programmes = { range(1, 5): '{7, 56}',7: '{5,7,9}'} see how to do a
-        # beautifull range dict in the future. Does not seem to be straighforward....
+        # observing_programmes = { range(1, 5): '{7, 56}',7: '{5,7,9}'}
         # if no PT, assume ship
-        # !!!! set only for drifting buoys. Rest assumed ships!
+        # Set only for drifting buoys. Rest assumed ships!
         # return df[df.columns[0]].swifter.apply( lambda x: '{5,7,9}' if x == 7 else '{7,56}')
 
     def string_add(self, ds, prepend=None, append=None, separator=None, zfill_col=None, zfill=None):
@@ -216,18 +155,6 @@ class mapping_functions():
         if duplicated:
             df = df[:-1]
         return df['string_add']
-
-    def get_orginal_value(self, df):
-        """
-        Parameters
-        ----------
-        df: data frame with temperature values
-        Returns
-        -------
-        temp: original temperature that is not a nan
-        """
-        value = df.dropna(axis=1, how='all')
-        return value.iloc[:, 0]
 
     def temperature_celsius_to_kelvin(self, ds):
         return ds + 273.15

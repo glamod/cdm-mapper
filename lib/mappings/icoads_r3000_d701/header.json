@@ -97,8 +97,8 @@
     },
     "report_timestamp": {
         "sections": "core",
-        "elements": ["YR","MO","DY","HR"],
-        "transform": "datetime_imma1"
+        "elements": ["YR","MO","DY"],
+        "transform": "datetime_fix_hour"
     },
     "report_duration": {
         "default": 11

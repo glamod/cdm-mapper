@@ -16,8 +16,8 @@
     },
     "date_time": {
         "sections": "core",
-        "elements": ["YR","MO","DY","HR"],
-        "transform": "datetime_imma1"
+        "elements": ["YR","MO","DY"],
+        "transform": "datetime_fix_hour"
     },
     "date_time_meaning": {
         "default": 2

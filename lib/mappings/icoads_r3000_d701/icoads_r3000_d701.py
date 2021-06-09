@@ -27,50 +27,6 @@ import numpy as np
 import pandas as pd
 import datetime
 
-
-def coord_dmh_to_180i(deg, min, hemis):
-    """
-    Converts longitudes from degrees, minutes and hemisphere
-    to decimal degrees between -180 to 180.
-    Parameters
-    ----------
-    deg: longitude or latitude in degrees
-    min: logitude or latitude in minutes
-    hemis: Hemisphere W or E
-
-    Returns
-    var: longitude in decimal degrees
-    -------
-    """
-    hemisphere = 1
-    min_df = min / 60
-    if hemis.any() == 'W':
-        hemisphere = -1
-    var = np.round((deg + min_df), 2) * hemisphere
-    return var
-
-
-def coord_dmh_to_90i(deg, min, hemis):
-    """
-    Converts latitudes from degrees, minutes and hemisphere
-    to decimal degrees between -90 to 90.
-    Parameters
-    ----------
-    deg: longitude or latitude in degrees
-    min: logitude or latitude in minutes
-    hemis: Hemisphere N or S
-
-    Returns
-    var: latitude in decimal degrees
-    -------
-    """
-    hemisphere = 1
-    min_df = min / 60
-    if hemis.any() == 'S':
-        hemisphere = -1
-    var = np.round((deg + min_df), 2) * hemisphere
-    return var
-
 def longitude_360to180_i(lon):
     if lon > 180:
         return -180 + math.fmod(lon, 180)
@@ -117,7 +73,7 @@ class mapping_functions():
     def datetime_utcnow(self):
         return datetime.datetime.utcnow()
 
-    def datetime_to_cdm_time(self, df):
+    def datetime_fix_hour(self, df):
         """
         Converts year, month, day and time indicator to
         a datetime obj with a 24hrs format '%Y-%m-%d-%H'
@@ -128,10 +84,10 @@ class mapping_functions():
         -------
         date: datetime obj
         """
-        date_format = "%Y-%m-%d-%H"
-        data = pd.to_datetime(df.iloc[:, 0:4].astype(str).apply("-".join, axis=1).values,
-                              format=date_format, errors='coerce')
 
+        date_format = "%Y-%m-%d-%H"
+        data = pd.to_datetime(df.astype(str).apply("-".join, axis=1).values + '-12',
+                              format=date_format, errors='coerce')
         return data
 
     def decimal_places(self,element):
@@ -165,40 +121,6 @@ class mapping_functions():
 
     def lineage(self,ds):
         return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + ". Initial conversion from ICOADS R3.0.0T"
-
-    def coord_dmh_to_180(self, df):
-        """
-        Passing attributes and converting longitude to decimal degrees
-        Parameters
-        ----------
-        df: with longitude degree, min, hemisphere
-        Returns
-        lon: longitude in decimal degrees
-        -------
-        """
-        lon = coord_dmh_to_180i(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2])
-        return lon
-
-    def coord_dmh_to_90(self, df):
-        """
-        Passing attributes and converting latitude to decimal degrees
-        Parameters
-        ----------
-        df: with latitude degree, min, hemisphere
-        Returns
-        lat: latitude in decimal degrees
-        -------
-        """
-        lat = coord_dmh_to_90i(df.iloc[:, 0], df.iloc[:, 1], df.iloc[:, 2])
-        return lat
-
-    # def location_accuracy(self, df):
-    #     print(df)
-    #     # (li_core,lat_core) math.radians(lat_core)
-    #     lat = coord_dmh_to_90i(df.iloc[:, 1], df.iloc[:, 2], df.iloc[:, 3])
-    #     la = np.vectorize(location_accuracy_i, otypes='f')(df.iloc[:, 0],
-    #                                                        lat)  # last minute tweak so that is does no fail on nans!
-    #     return la
 
     def location_accuracy(self,df): #(li_core,lat_core) math.radians(lat_core)
         la = np.vectorize(location_accuracy_i,otypes='f')(df.iloc[:,0], df.iloc[:,1])#last minute tweak so that is does no fail on nans!

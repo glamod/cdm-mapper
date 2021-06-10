@@ -16,8 +16,8 @@
     },
     "date_time": {
         "sections": "core",
-        "elements": ["YR","MO","DY"],
-        "transform": "datetime_fix_hour"
+        "elements": ["YR","MO","DY", "LON", "LAT"],
+        "transform": "datetime_to_cdm_time"
     },
     "date_time_meaning": {
         "default": 2

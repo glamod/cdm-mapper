@@ -26,6 +26,87 @@ import math
 import numpy as np
 import pandas as pd
 import datetime
+from timezonefinder import TimezoneFinder
+
+
+def coord_dmh_to_180i(deg, min, hemis):
+    """
+    Converts longitudes from degrees, minutes and hemisphere
+    to decimal degrees between -180 to 180.
+    Parameters
+    ----------
+    deg: longitude or latitude in degrees
+    min: logitude or latitude in minutes
+    hemis: Hemisphere W or E
+
+    Returns
+    var: longitude in decimal degrees
+    -------
+    """
+    hemisphere = 1
+    min_df = min / 60
+    if hemis.any() == 'W':
+        hemisphere = -1
+    var = np.round((deg + min_df), 2) * hemisphere
+    return var
+
+
+def coord_360_to_180i(long3):
+    """
+    Converts longitudes from degrees express in 0 to 360
+    to decimal degrees between -180 to 180.
+    According to
+    https://confluence.ecmwf.int/pages/viewpage.action?pageId=149337515
+    Parameters
+    ----------
+    long3: longitude or latitude in degrees
+
+    Returns
+    long1: longitude in decimal degrees
+    -------
+    """
+    long1 = (long3 + 180) % 360 - 180
+
+    return long1
+
+
+def coord_dmh_to_90i(deg, min, hemis):
+    """
+    Converts latitudes from degrees, minutes and hemisphere
+    to decimal degrees between -90 to 90.
+    Parameters
+    ----------
+    deg: longitude or latitude in degrees
+    min: logitude or latitude in minutes
+    hemis: Hemisphere N or S
+
+    Returns
+    var: latitude in decimal degrees
+    -------
+    """
+    hemisphere = 1
+    min_df = min / 60
+    if hemis == 'S':
+        hemisphere = -1
+    var = np.round((deg + min_df), 2) * hemisphere
+    return var
+
+
+def convert_to_utc_i(date, zone):
+    """
+    Converts local time zone to utc
+    Parameters
+    ----------
+    date: datetime.series object
+    zone: timezone as a string
+
+    Returns
+    -------
+    date.time_index.obj in utc
+    """
+    datetime_index_aware = date.tz_localize(tz=zone)
+    return datetime_index_aware.tz_convert('UTC')
+
 
 def longitude_360to180_i(lon):
     if lon > 180:
@@ -48,6 +129,12 @@ def string_add_i(a,b,c,sep):
         return sep.join(filter(None,[a,b,c]))
     else:
         return
+
+
+def time_zone_i(lat, lon):
+    tf = TimezoneFinder()
+    zone = tf.timezone_at(lng=lon, lat=lat)
+    return zone
 
 class mapping_functions():
     def __init__(self, atts):
@@ -73,6 +160,41 @@ class mapping_functions():
     def datetime_utcnow(self):
         return datetime.datetime.utcnow()
 
+    def datetime_to_cdm_time(self, df):
+        """
+        Converts year, month, day and time indicator to
+        a datetime obj with a 24hrs format '%Y-%m-%d-%H'
+        Parameters
+        ----------
+        dates: list of elements from a date array
+        Returns
+        -------
+        date: datetime obj
+        """
+        df = df.dropna(how='any')
+        date_format = "%Y-%m-%d-%H-%M"
+
+        df_dates = df.core.iloc[:, 0:3]
+        df_dates['H'] = 12
+        df_dates['M'] = 0
+        df_coords = df.core.iloc[:, 3:5]
+
+        # Covert long to -180 to 180 for time zone finding
+        df_coords['lon_converted'] = df_coords.apply(lambda x: coord_360_to_180i(x['LON']), axis=1)
+        df_coords['time_zone'] = df_coords.apply(lambda x: time_zone_i(x['LAT'],
+                                                                       x['lon_converted']), axis=1)
+
+        data = pd.to_datetime(df_dates.iloc[:, 0:5].astype(str).apply("-".join, axis=1).values,
+                              format=date_format, errors='coerce')
+
+        d = {'Dates': data,
+             'Time_zone': df_coords.time_zone.values}
+        df_time = pd.DataFrame(data=d)
+
+        df_time['time_utc'] = df_time.apply(lambda x: convert_to_utc_i(x['Dates'], x['Time_zone']), axis=1)
+
+        return df_time.time_utc
+
     def datetime_fix_hour(self, df):
         """
         Converts year, month, day and time indicator to
@@ -88,6 +210,7 @@ class mapping_functions():
         date_format = "%Y-%m-%d-%H"
         data = pd.to_datetime(df.astype(str).apply("-".join, axis=1).values + '-12',
                               format=date_format, errors='coerce')
+
         return data
 
     def decimal_places(self,element):

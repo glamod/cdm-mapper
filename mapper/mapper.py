@@ -48,7 +48,7 @@ def _map(imodel, data, data_atts, cdm_subset = None, log_level = 'INFO'):
                 logger.warning('No code table mappings found for model {}'.format(imodel))
 
     except Exception:
-        logger.debug('Error loading {} cdm mappings'.format(imodel), exc_info=True)
+        logger.error('Error loading {} cdm mappings'.format(imodel), exc_info=True)
         return
 
     if not imodel_maps:

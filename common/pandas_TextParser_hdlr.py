@@ -11,7 +11,7 @@ Module with functions to handle pd.io.parsers.TextFileReader objects.
 import pandas as pd
 import cdm.common.logging_hdlr as logging_hdlr
 
-logger = logging_hdlr.init_logger(__name__,level = 'DEBUG')
+logger = logging_hdlr.init_logger(__name__, level='ERROR')
 
 def restore(TextParser_ref,TextParser_options):
     try:

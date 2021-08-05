@@ -11,9 +11,6 @@ for the input data model.
 @author: iregon
 """
 
-# PAT test
-
-
 import os
 import pandas as pd
 import numpy as np

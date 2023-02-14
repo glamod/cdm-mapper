@@ -141,8 +141,7 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
                         data_atts.get(element).get('column_type')) for element in elements}
                     notna_idx = np.where(idata[elements].notna().all(axis=1))[0]
                     to_map = idata[elements].iloc[notna_idx].astype(to_map_types)
-                    #notna_idx += idata.index[0]  # to account for parsers
-                    notna_idx = idata.index[ notna_idx ].to_numpy()
+                    notna_idx += idata.index[0]  # to account for parsers
                     if len(elements) == 1:
                         to_map = to_map.iloc[:, 0]
                     isEmpty = True if len(to_map) == 0 else False

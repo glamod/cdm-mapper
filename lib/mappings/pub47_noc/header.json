@@ -1,17 +1,17 @@
 {
     "station_name": {
-        "elements": "name"
+        "elements": "ship_name"
     },
     "platform_sub_type": {
-        "elements": "vssl"
+        "elements": "vessel_type"
     },
     "primary_station_id": {
-        "elements": "call"
+        "elements": "ship_callsign"
     },
     "station_record_number": {
         "elements": "record"
     },
     "report_duration": {
-        "elements": "freq"
+        "elements": "observing_frequency"
     }
 }

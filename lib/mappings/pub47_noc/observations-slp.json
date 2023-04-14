@@ -1,14 +1,14 @@
 {
     "z_coordinate": {
-        "elements": ["brmH1","platH"],
+        "elements": ["barometer1_height_above_summer_load_line","visual_observing_height"],
         "transform": "select_column"
     },
     "observation_height_above_station_surface": {
-        "elements": ["brmH1","platH"],
+        "elements": ["barometer1_height_above_summer_load_line","visual_observing_height"],
         "transform": "select_column"
     },
     "sensor_id": {
-        "elements": "bm1"
+        "elements": "barometer1_parameter"
     },
     "sensor_automation_status": {
         "elements": "automation"

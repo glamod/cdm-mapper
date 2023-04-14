@@ -1,14 +1,14 @@
 {
     "z_coordinate": {
-        "elements": ["thmH1","brmH1","platH"],
+        "elements": ["thermometer1_height_above_summer_load_line","barometer1_height_above_summer_load_line","visual_observing_height"],
         "transform": "select_column"
     },
     "observation_height_above_station_surface": {
-        "elements": ["thmH1","brmH1","platH"],
+        "elements": ["thermometer1_height_above_summer_load_line","barometer1_height_above_summer_load_line","visual_observing_height"],
         "transform": "select_column"
     },
     "sensor_id": {
-        "elements": "hy1"
+        "elements": "hygrometer1_parameter"
     },
     "sensor_automation_status": {
         "elements": "automation"

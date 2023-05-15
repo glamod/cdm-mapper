@@ -77,10 +77,8 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
             logger.warning('No mapping functions found for model {}'.format(imodel))
         # Read code table mappings
         imodel_code_tables = mappings_hdlr.load_code_tables_maps(imodel)
-        if imodel_code_tables is None:
+        if len(imodel_code_tables) < 1:
             logger.warning('No code table mappings found for model {}'.format(imodel))
-        elif len(imodel_code_tables) < 1:
-            logger.warning('No code table mappings found for model {} (not NoneType)'.format(imodel))
 
     except Exception:
         logger.error('Error loading {} cdm mappings'.format(imodel), exc_info=True)
@@ -141,27 +139,18 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
                         continue
                     to_map_types = {element: properties.pandas_dtypes.get('from_atts').get(
                         data_atts.get(element).get('column_type')) for element in elements}
-                    notna_idx_idx = np.where(idata[elements].notna().all(axis=1))[0]
-                    logger.debug('\tnotna_idx_idx: {}'.format(notna_idx_idx))
-                    to_map = idata[elements].iloc[notna_idx_idx].astype(to_map_types)
-                    #notna_idx = notna_idx_idx + idata.index[0]  # to account for parsers #original
-                    notna_idx = idata.index[notna_idx_idx] #fix?
+                    notna_idx = np.where(idata[elements].notna().all(axis=1))[0]
+                    to_map = idata[elements].iloc[notna_idx].astype(to_map_types)
+                    notna_idx += idata.index[0]  # to account for parsers
                     if len(elements) == 1:
                         to_map = to_map.iloc[:, 0]
                     isEmpty = True if len(to_map) == 0 else False
                 if transform and not isEmpty:
                     kwargs = {} if not kwargs else kwargs
-                    logger.info('\ttransform: {}'.format(transform))
-                    logger.info('\tkwargs: {}'.format(",".join(list(kwargs.keys()))))
-
-                    #os._exit(1)
+                    logger.debug('\tkwargs: {}'.format(",".join(list(kwargs.keys()))))
                     trans = eval('imodel_functions.' + transform)
-                    logger.debug('\ttable_df_i Index: {}'.format(table_df_i.index))
-                    logger.debug('\tidata_i Index: {}'.format(idata.index))
-                    logger.debug('\tnotna_idx: {}'.format(notna_idx))
+                    logger.debug('\ttransform: {}'.format(transform))
                     if elements:
-                        #logger.warning('Table_df Index {}'.format(table_df_i))
-                        #os._exit(1)
                         table_df_i.loc[notna_idx, cdm_key] = trans(to_map, **kwargs)
                     else:
                         table_df_i[cdm_key] = trans(**kwargs)
@@ -219,10 +208,9 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
 
     for table in cdm_tables.keys():
         # Convert dtime to object to be parsed by the reader
-        logger.debug('\tParse datetime by reader; Table: {}; Colums: {}'.format(table, date_columns[table]))
-        logger.debug('\tParse datetime by reader; out_dtype-keys: {}; out dtypes: {}'.format(out_dtypes[table].keys(),out_dtypes[table]))
         cdm_tables[table]['buffer'].seek(0)
-        cdm_tables[table]['data'] = pd.read_csv(cdm_tables[table]['buffer'], names=out_dtypes[table].keys(), dtype=out_dtypes[table], parse_dates=date_columns[table])
+        cdm_tables[table]['data'] = pd.read_csv(cdm_tables[table]['buffer'], names=out_dtypes[table].keys(),
+                                                dtype=out_dtypes[table], parse_dates=date_columns[table])
         cdm_tables[table]['buffer'].close()
         cdm_tables[table].pop('buffer')
 

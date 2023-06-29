@@ -151,8 +151,8 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
                     isEmpty = True if len(to_map) == 0 else False
                 if transform and not isEmpty:
                     kwargs = {} if not kwargs else kwargs
-                    logger.info('\ttransform: {}'.format(transform))
-                    logger.info('\tkwargs: {}'.format(",".join(list(kwargs.keys()))))
+                    logger.debug('\ttransform: {}'.format(transform))
+                    logger.debug('\tkwargs: {}'.format(",".join(list(kwargs.keys()))))
 
                     #os._exit(1)
                     trans = eval('imodel_functions.' + transform)

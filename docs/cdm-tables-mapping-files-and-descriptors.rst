@@ -168,4 +168,3 @@ Code tables can be also used for simple transformations of the elements, dependi
             "elements": "ID",
             "code_table": "ship_names"
      }
-

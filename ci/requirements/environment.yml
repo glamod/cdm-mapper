@@ -1,0 +1,17 @@
+name: cdm_mapper-test
+
+channels:
+    - conda-forge
+    - nodefaults
+
+dependencies:
+    - pandas
+    - dask
+    - matplotlib
+    - xarray
+    - datashader
+    - msgpack
+    # for testing
+    - pytest
+    - pytest-cov
+    - pytest-env

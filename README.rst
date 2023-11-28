@@ -36,49 +36,54 @@ You can install the package directly with pip:
 
 .. code-block:: console
 
-     pip install  cdm_mapper
+    pip install  cdm_mapper
 
 If you want to contribute, I recommend cloning the repository and installing the package in development mode, e.g.
 
 .. code-block:: console
 
-    git clone https://github.com/glamod/cdm_mapper
+    git clone https://github.com/glamod/cdm-mapper
     cd cdm_mapper
     pip install -e .
 
 This will install the package but you can still edit it and you don't need the package in your :code:`PYTHONPATH`
-   
+
 Run a test
 ----------
 
-import os
-import cdm
-import json
-import mdf_reader
-import warnings
-warnings.filterwarnings('ignore')
-```
-4. Read imma data with the `mdf_reader.read()` and copy the data attributes 
-```
-schema = 'imma1_d704'
-data_file_path = '125-704_1879-01_subset.imma'
+.. code-block:: console
 
-data_raw = mdf_reader.read(data_file_path, data_model = schema)
-attributes = data_raw.atts.copy()
-```
+    import os
+    import cdm
+    import json
+    import mdf_reader
+    import warnings
+    warnings.filterwarnings('ignore')
+    
+Read imma data with the `mdf_reader.read()` and copy the data attributes 
+------------------------------------------------------------------------
 
-5. Map this data to a CDM build for the same deck (in this case deck 704: US Marine Metereological Journal collection of data)
-```
-name_of_model = 'icoads_r3000_d704'
+.. code-block:: console
 
-cdm_dict = cdm.map_model(name_of_model, data_raw.data, attributes, 
-                         cdm_subset = None, log_level = 'DEBUG')
+    schema = 'imma1_d704'
+    data_file_path = '125-704_1879-01_subset.imma'
 
-```
+    data_raw = mdf_reader.read(data_file_path, data_model = schema)
+    attributes = data_raw.atts.copy()
+    
+Map this data to a CDM build for the same deck (in this case deck 704: US Marine Metereological Journal collection of data)
+---------------------------------------------------------------------------------------------------------------------------
 
-For more details on how to use the `cdm-mapper` tool see the following `jupyter notebook`_.
+.. code-block:: console
 
-6. For a detailed guide on how to build a cdm and write the output of the `cdm.map_model()` function in ascii see the `user guide`_.
+
+    name_of_model = 'icoads_r3000_d704'
+
+    cdm_dict = cdm.map_model(name_of_model, data_raw.data, attributes, 
+                             cdm_subset = None, log_level = 'DEBUG')    
+                             
+For more details on how to use the ``cdm-mapper`` tool see the following `jupyter notebook`_.
+For a detailed guide on how to build a cdm and write the output of the `cdm.map_model()` function in ascii see the `user guide`_.
 
 .. _python: https://www.python.org
 
@@ -94,42 +99,38 @@ For more details on how to use the `cdm-mapper` tool see the following `jupyter 
 
 .. _user guide: https://git.noc.ac.uk/brecinosrivas/cdm-mapper/-/tree/master/docs
 
-.. |pypi| image:: https://img.shields.io/pypi/v/cdm_mapper.svg
-        :target: https://pypi.python.org/pypi/cdm_mapper
+.. |pypi| image:: https://img.shields.io/pypi/v/cdm-mapper.svg
+        :target: https://pypi.python.org/pypi/cdm-mapper
         :alt: Python Package Index Build
-
-.. |docs| image:: https://readthedocs.org/projects/cdm_mapper/badge/?version=latest
+        
+.. |docs| image:: https://readthedocs.org/projects/cdm-mapper/badge/?version=latest
         :target: https://cdm-mapper.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-.. |versions| image:: https://img.shields.io/pypi/pyversions/cdm_mapper.svg
+.. |versions| image:: https://img.shields.io/pypi/pyversions/cdm-mapper.svg
         :target: https://pypi.python.org/pypi/cdm_mapper
-        :alt: Supported Python Versions
-
-.. |license| image:: https://img.shields.io/github/license/glamod/cdm_mapper.svg
+        :alt: Supported Python Versions    
+        
+.. |license| image:: https://img.shields.io/github/license/glamod/cdm-mapper.svg
         :target: https://github.com/glamod/cdm_mapper/blob/master/LICENSE
         :alt: License
 
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/psf/black
         :alt: Python Black
-
-.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/glamod/cdm_mapper/master.svg
-   :target: https://results.pre-commit.ci/latest/github/glamod/cdm_mapper/master
-   :alt: pre-commit.ci status
-
-.. |status| image:: https://www.repostatus.org/badges/latest/active.svg
-        :target: https://www.repostatus.org/#active
-        :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
-
-.. |build| image:: https://github.com/glamod/cdm_mapper/actions/workflows/ci.yml/badge.svg
-        :target: https://github.com/glamod/cdm_mapper/actions/workflows/ci.yml
+        
+.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/glamod/cdm-mapper/master.svg
+        :target: https://results.pre-commit.ci/latest/github/glamod/cdm-mapper/master
+        :alt: pre-commit.ci status   
+        
+.. |build| image:: https://github.com/glamod/cdm-mapper/actions/workflows/ci.yml/badge.svg
+        :target: https://github.com/glamod/cdm-mapper/actions/workflows/ci.yml
         :alt: Build Status
-
-.. |coveralls| image:: https://codecov.io/gh/glamod/cdm_mapper/branch/master/graph/badge.svg
-	:target: https://codecov.io/gh/glamod/cdm_mapper
-	:alt: Coveralls
-
+                
+.. |coveralls| image:: https://codecov.io/gh/glamod/cdm-mapper/branch/master/graph/badge.svg
+      	:target: https://codecov.io/gh/glamod/cdm-mapper
+        :alt: Coveralls
+          
 .. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7762679.svg
         :target: https://doi.org/10.5281/zenodo.7762679
- 	:alt:   DOI
+ 	      :alt:   DOI        

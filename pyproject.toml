@@ -7,12 +7,12 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cdm_mapper"
-description = "Model Data Format reader toolbox"
+name = "cdm"
+description = "Common Data Model mapper toolbox"
 readme = "README.rst"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
-keywords = ["cdm_mapper"]
+keywords = ["cdm"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Developers",
@@ -24,25 +24,24 @@ classifiers = [
   "Programming Language :: Python :: 3.11"
 ]
 dependencies = [
+  "matplotlib",
   "pandas>=2.1.0",
   "dask",
   "distributed",
   "datashader",
-  "matplotlib",
   "requests",
   "xarray",
-  "msgpack",
-  
+  "msgpack"
 ]
 dynamic = ["version"]
 
 [project.scripts]
-cdm = "cdm.cli:main"
+mdf_reader = "cdm.cli:main"
 
 [project.urls]
 homepage = "https://cdm-mapper.readthedocs.io"
 documentation = "https://cdm-mapper.readthedocs.io"
-repository = "https://github.com/glamod/cdm_mapper.git"
+repository = "https://github.com/glamod/cdm-mapper.git"
 changelog = "https://cdm-mapper.readthedocs.io/en/latest/history.html"
 
 [tool.black]
@@ -59,7 +58,7 @@ append_only = true
 
 [tool.mypy]
 exclude = "doc|flycheck"
-files = "index_calculator/"
+files = "cdm/"
 show_error_codes = true
 warn_unused_ignores = true
 
@@ -119,7 +118,7 @@ select = [
 ]
 
 [tool.ruff.isort]
-known-first-party = ["cdm_mapper"]
+known-first-party = ["cdm"]
 known-third-party = [
   "matplotlib",
   "numpy",
@@ -135,6 +134,6 @@ packages = ["cdm"]
 
 [tool.setuptools_scm]
 fallback_version = "999"
-write_to = "cdm_mapper/_version.py"
+write_to = "cdm/_version.py"
 write_to_template = '__version__ = "{version}"'
 tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"

@@ -170,18 +170,29 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level='INFO'):
                     # Approach that does not work when it is not nested...so just try and assume not nested if fails
                     # Prepare code_table
                     table_map = imodel_code_tables.get(code_table)
-                    try:
-                        s = pd.DataFrame(table_map).unstack().rename_axis((elements)).rename('cdm')
-                    except:
-                        s = pd.DataFrame(table_map.values(), index=table_map.keys(), columns=['cdm']).rename_axis(
-                            (elements))
-                    # Make sure what we try to map is a df, not a series (method join is only on df...)
+
                     try:
                         to_map = to_map.to_frame()
                     except:
                         pass
-                    table_df_i[cdm_key] = to_map.astype(str).join(s, on=elements)[
-                        'cdm']  # here indexes well inherited as opposed to trans() above
+
+                    to_map_str = to_map.astype(str)
+                    
+                                         
+                    def map_to_df(m, x):
+                      for x_ in x:
+                        if x_ in m.keys():
+                          v = m[x_]
+                          if isinstance(v, dict):
+                            m = v
+                          else:
+                            return v  
+                        else:
+                          return
+                            
+                    to_map_str.columns =  ['_'.join(col) for col in to_map_str.columns.values]
+                    table_df_i[cdm_key] = to_map_str.apply(lambda x: map_to_df(table_map, x), axis=1)
+
                 elif elements and not isEmpty:
                     table_df_i[cdm_key] = to_map
                 elif default is not None:  # (vakue = 0 evals to False!!)

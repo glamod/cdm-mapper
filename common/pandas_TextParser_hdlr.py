@@ -54,7 +54,7 @@ def is_not_empty(TextParser):
 
     """
     try:
-        TextParser_ref = TextParser.f
+        TextParser_ref = TextParser.handles.handle
         TextParser_options = TextParser.orig_options
     except Exception as e:
         logger.error('Failed to process input. Input type is {}'.format(type(TextParser)), exc_info=True)

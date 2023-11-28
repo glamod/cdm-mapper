@@ -43,7 +43,7 @@ If you want to contribute, I recommend cloning the repository and installing the
 .. code-block:: console
 
     git clone https://github.com/glamod/cdm_mapper
-    cd mdf_reader
+    cd cdm_mapper
     pip install -e .
 
 This will install the package but you can still edit it and you don't need the package in your :code:`PYTHONPATH`
@@ -94,40 +94,40 @@ For more details on how to use the `cdm-mapper` tool see the following `jupyter 
 
 .. _user guide: https://git.noc.ac.uk/brecinosrivas/cdm-mapper/-/tree/master/docs
 
-.. |pypi| image:: https://img.shields.io/pypi/v/mdf_reader.svg
-        :target: https://pypi.python.org/pypi/mdf_reader
+.. |pypi| image:: https://img.shields.io/pypi/v/cdm_mapper.svg
+        :target: https://pypi.python.org/pypi/cdm_mapper
         :alt: Python Package Index Build
 
-.. |docs| image:: https://readthedocs.org/projects/mdf_reader/badge/?version=latest
-        :target: https://mdf-reader.readthedocs.io/en/latest/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/cdm_mapper/badge/?version=latest
+        :target: https://cdm-mapper.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
-.. |versions| image:: https://img.shields.io/pypi/pyversions/mdf_reader.svg
-        :target: https://pypi.python.org/pypi/mdf_reader
+.. |versions| image:: https://img.shields.io/pypi/pyversions/cdm_mapper.svg
+        :target: https://pypi.python.org/pypi/cdm_mapper
         :alt: Supported Python Versions
 
-.. |license| image:: https://img.shields.io/github/license/glamod/mdf_reader.svg
-        :target: https://github.com/glamod/mdf_reader/blob/master/LICENSE
+.. |license| image:: https://img.shields.io/github/license/glamod/cdm_mapper.svg
+        :target: https://github.com/glamod/cdm_mapper/blob/master/LICENSE
         :alt: License
 
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/psf/black
         :alt: Python Black
 
-.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/glamod/mdf_reader/master.svg
-   :target: https://results.pre-commit.ci/latest/github/glamod/mdf_reader/master
+.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/glamod/cdm_mapper/master.svg
+   :target: https://results.pre-commit.ci/latest/github/glamod/cdm_mapper/master
    :alt: pre-commit.ci status
 
 .. |status| image:: https://www.repostatus.org/badges/latest/active.svg
         :target: https://www.repostatus.org/#active
         :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
 
-.. |build| image:: https://github.com/glamod/mdf_reader/actions/workflows/ci.yml/badge.svg
-        :target: https://github.com/glamod/mdf_reader/actions/workflows/ci.yml
+.. |build| image:: https://github.com/glamod/cdm_mapper/actions/workflows/ci.yml/badge.svg
+        :target: https://github.com/glamod/cdm_mapper/actions/workflows/ci.yml
         :alt: Build Status
 
-.. |coveralls| image:: https://codecov.io/gh/glamod/mdf_reader/branch/master/graph/badge.svg
-	:target: https://codecov.io/gh/glamod/mdf_reader
+.. |coveralls| image:: https://codecov.io/gh/glamod/cdm_mapper/branch/master/graph/badge.svg
+	:target: https://codecov.io/gh/glamod/cdm_mapper
 	:alt: Coveralls
 
 .. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7762679.svg

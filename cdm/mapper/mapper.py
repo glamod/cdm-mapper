@@ -18,8 +18,8 @@ import pandas as pd
 
 from .. import properties
 from ..common import logging_hdlr, pandas_TextParser_hdlr
-from ..lib.mappings import mappings_hdlr
-from ..lib.tables import tables_hdlr
+from ..library.mappings import mappings_hdlr
+from ..library.tables import tables_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 

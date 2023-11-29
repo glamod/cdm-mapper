@@ -84,7 +84,7 @@ def read_tables(
                 e.g ``col_subset = {table0:[columns],...tablen:[columns]}``
             - For a single section:
                 e.g. ``list type object col_subset = [columns]``
-                This variable assumes that the column names are all conform to the cdm field names in lib.tables/*.json
+                This variable assumes that the column names are all conform to the cdm field names in library.tables/*.json
     log_level: Level of logging messages to save
     na_values: specifies the format of NaN values
 

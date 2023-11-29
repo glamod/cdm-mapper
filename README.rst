@@ -15,18 +15,18 @@ Common Data Model mapper: ``cdm`` toolbox
 +----------------------------+-----------------------------------------------------+
 
 The `cdm-mapper` or (`cdm`) is a python_ tool designed to map observed variables and its associated metadata from a `data
-model`_or models combination to the `C3S CDS Common Data Model`_ (CDM) format. 
+model`_or models combination to the `C3S CDS Common Data Model`_ (CDM) format.
 
 **Input data**:
 
-- _imodel_: Data elements in a unique pandas.DataFrame_ objects with its attributes, available in a python dictionary and stored in a `.json` file. 
+- _imodel_: Data elements in a unique pandas.DataFrame_ objects with its attributes, available in a python dictionary and stored in a `.json` file.
 
 **Output data**:
 
 - A series of files in ascii format that contains each field from the CDM tables for which a mapping element has been defined. For example:
-   - Header table. 
-   - Observations table for Sea level Pressure. 
-   
+   - Header table.
+   - Observations table for Sea level Pressure.
+
 For more information on the tables that compose the CDM format read the following guide_.
 
 Installation
@@ -59,8 +59,8 @@ Run a test
     import mdf_reader
     import warnings
     warnings.filterwarnings('ignore')
-    
-Read imma data with the `mdf_reader.read()` and copy the data attributes 
+
+Read imma data with the `mdf_reader.read()` and copy the data attributes
 ------------------------------------------------------------------------
 
 .. code-block:: console
@@ -70,7 +70,7 @@ Read imma data with the `mdf_reader.read()` and copy the data attributes
 
     data_raw = mdf_reader.read(data_file_path, data_model = schema)
     attributes = data_raw.atts.copy()
-    
+
 Map this data to a CDM build for the same deck (in this case deck 704: US Marine Metereological Journal collection of data)
 ---------------------------------------------------------------------------------------------------------------------------
 
@@ -79,9 +79,9 @@ Map this data to a CDM build for the same deck (in this case deck 704: US Marine
 
     name_of_model = 'icoads_r3000_d704'
 
-    cdm_dict = cdm.map_model(name_of_model, data_raw.data, attributes, 
-                             cdm_subset = None, log_level = 'DEBUG')    
-                             
+    cdm_dict = cdm.map_model(name_of_model, data_raw.data, attributes,
+                             cdm_subset = None, log_level = 'DEBUG')
+
 For more details on how to use the ``cdm-mapper`` tool see the following `jupyter notebook`_.
 For a detailed guide on how to build a cdm and write the output of the `cdm.map_model()` function in ascii see the `user guide`_.
 
@@ -102,15 +102,15 @@ For a detailed guide on how to build a cdm and write the output of the `cdm.map_
 .. |pypi| image:: https://img.shields.io/pypi/v/cdm-mapper.svg
         :target: https://pypi.python.org/pypi/cdm-mapper
         :alt: Python Package Index Build
-        
+
 .. |docs| image:: https://readthedocs.org/projects/cdm-mapper/badge/?version=latest
         :target: https://cdm-mapper.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
 .. |versions| image:: https://img.shields.io/pypi/pyversions/cdm-mapper.svg
         :target: https://pypi.python.org/pypi/cdm_mapper
-        :alt: Supported Python Versions    
-        
+        :alt: Supported Python Versions
+
 .. |license| image:: https://img.shields.io/github/license/glamod/cdm-mapper.svg
         :target: https://github.com/glamod/cdm_mapper/blob/master/LICENSE
         :alt: License
@@ -118,19 +118,19 @@ For a detailed guide on how to build a cdm and write the output of the `cdm.map_
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/psf/black
         :alt: Python Black
-        
+
 .. |pre-commit| image:: https://results.pre-commit.ci/badge/github/glamod/cdm-mapper/master.svg
         :target: https://results.pre-commit.ci/latest/github/glamod/cdm-mapper/master
-        :alt: pre-commit.ci status   
-        
+        :alt: pre-commit.ci status
+
 .. |build| image:: https://github.com/glamod/cdm-mapper/actions/workflows/ci.yml/badge.svg
         :target: https://github.com/glamod/cdm-mapper/actions/workflows/ci.yml
         :alt: Build Status
-                
+
 .. |coveralls| image:: https://codecov.io/gh/glamod/cdm-mapper/branch/master/graph/badge.svg
       	:target: https://codecov.io/gh/glamod/cdm-mapper
         :alt: Coveralls
-          
+
 .. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7762679.svg
         :target: https://doi.org/10.5281/zenodo.7762679
- 	      :alt:   DOI        
+ 	      :alt:   DOI

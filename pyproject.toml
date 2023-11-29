@@ -23,20 +23,10 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11"
 ]
-dependencies = [
-  "matplotlib",
-  "pandas>=2.1.0",
-  "dask",
-  "distributed",
-  "datashader",
-  "requests",
-  "xarray",
-  "msgpack"
-]
-dynamic = ["version"]
+dynamic = ["version", "dependencies"]
 
 [project.scripts]
-mdf_reader = "cdm.cli:main"
+cdm = "cdm.cli:main"
 
 [project.urls]
 homepage = "https://cdm-mapper.readthedocs.io"
@@ -121,7 +111,6 @@ select = [
 known-first-party = ["cdm"]
 known-third-party = [
   "matplotlib",
-  "numpy",
   "pandas",
   "pkg_resources",
   "pytest",
@@ -137,3 +126,6 @@ fallback_version = "999"
 write_to = "cdm/_version.py"
 write_to_template = '__version__ = "{version}"'
 tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
+
+[tool.setuptools.dynamic]
+dependencies = {file = "ci/requirements/requirements.txt"}

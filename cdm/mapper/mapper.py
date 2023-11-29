@@ -16,10 +16,10 @@ from io import StringIO
 import numpy as np
 import pandas as pd
 
-from cdm import properties
-from cdm.common import logging_hdlr, pandas_TextParser_hdlr
-from cdm.lib.mappings import mappings_hdlr
-from cdm.lib.tables import tables_hdlr
+from .. import properties
+from ..common import logging_hdlr, pandas_TextParser_hdlr
+from ..lib.mappings import mappings_hdlr
+from ..lib.tables import tables_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 

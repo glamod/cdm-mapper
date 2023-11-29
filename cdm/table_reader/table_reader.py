@@ -45,8 +45,8 @@ import os
 
 import pandas as pd
 
-from cdm import properties
-from cdm.common import logging_hdlr
+from .. import properties
+from ..common import logging_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 

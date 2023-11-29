@@ -18,8 +18,8 @@ import os
 
 import requests
 
-from cdm import properties
-from cdm.common import logging_hdlr
+from ... import properties
+from ...common import logging_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 table_path = module_path

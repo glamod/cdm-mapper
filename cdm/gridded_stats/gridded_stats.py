@@ -30,7 +30,7 @@ import pandas as pd
 import xarray as xr
 from dask import dataframe as dd
 
-from cdm import properties
+from .. import properties
 
 # SOME COMMON PARAMS ----------------------------------------------------------
 # For canvas

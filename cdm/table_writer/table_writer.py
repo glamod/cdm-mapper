@@ -23,8 +23,8 @@ import os
 import numpy as np
 import pandas as pd
 
-from cdm import properties
-from cdm.common import logging_hdlr
+from .. import properties
+from ..common import logging_hdlr
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -300,7 +300,7 @@ def table_to_ascii(
 
 
 def cdm_to_ascii(
-    cdm,
+    cdm_table,
     delimiter="|",
     null_label="null",
     cdm_complete=True,
@@ -319,7 +319,7 @@ def cdm_to_ascii(
 
     Parameters
     ----------
-    cdm:
+    cdm_table:
         common data model tables to export
     delimiter:
         default '|'
@@ -346,13 +346,13 @@ def cdm_to_ascii(
     # Because how the printers are written, they modify the original data frame!,
     # also removing rows with empty observation_value in observation_tables
     extension = "." + extension
-    for table in cdm.keys():
+    for table in cdm_table.keys():
         logger.info(f"Printing table {table}")
         filename = "-".join(filter(bool, [prefix, table, suffix])) + extension
         filepath = filename if not out_dir else os.path.join(out_dir, filename)
         table_to_ascii(
-            cdm[table]["data"],
-            cdm[table]["atts"],
+            cdm_table[table]["data"],
+            cdm_table[table]["atts"],
             delimiter=delimiter,
             null_label=null_label,
             cdm_complete=cdm_complete,

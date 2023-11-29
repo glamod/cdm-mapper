@@ -317,36 +317,33 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
 
 
 def map_model(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
-    """
-    Calls the main mapping function _map()
+    """Maps a pandas DataFrame to the CDM header and observational tables.
 
     Parameters
     ----------
-    imodel: a data model that can be of several types.
-
-        1. A generic mapping from a defined data model, like IMMA1’s core and attachments.
-        e.g. ``~/cdm-mapper/lib/mappings/icoads_r3000``
-
-        2. A specific mapping from generic data model to CDM, like map a SID-DCK from IMMA1’s core and attachments to
-        CDM in a specific way.
-            e.g. ``~/cdm-mapper/lib/mappings/icoads_r3000_d704``
-    data: input data to map.
-            e.g. a ``pandas.Dataframe`` or ``io.parsers.TextFileReader`` objects or in-memory text streams
-            (io.StringIO object).
-    data_atts: dictionary with the {element_name:element_attributes} of the data.
-        Type: string.
-    cdm_subset: subset of CDM model tables to map.
-        Defaults to the full set of CDM tables defined for the imodel. Type: list.
-    log_level: level of logging information to save.
-        Defaults to ‘DEBUG’.
-        Type string.
+    imodel: str
+      a data model that can be of several types.
+      1. A generic mapping from a defined data model, like IMMA1’s core and attachments.
+      e.g. ``cdm/library/mappings/icoads_r3000``
+      2. A specific mapping from generic data model to CDM, like map a SID-DCK from IMMA1’s core and attachments to
+      CDM in a specific way.
+      e.g. ``cdm/library/mappings/icoads_r3000_d704``
+    data: pd.DataFrame, pd.parser.TextFileReader or io.String
+      input data to map.
+    data_atts: dict
+      dictionary with the {element_name:element_attributes} of the data.
+      Type: string.
+    cdm_subset: list, oprional
+      subset of CDM model tables to map.
+      Defaults to the full set of CDM tables defined for the imodel.
+    log_level: str
+      level of logging information to save.
+      Defaults to ‘DEBUG’.
 
     Returns
     -------
-    cdm_tables:
-        a python dictionary with the ``{cdm_table_name: cdm_table_object}`` pairs.
-
-    For more information look at the _map function.
+    cdm_tables: dict
+      a python dictionary with the ``{cdm_table_name: cdm_table_object}`` pairs.
     """
     logger = logging_hdlr.init_logger(__name__, level=log_level)
     # Check we have imodel registered, leave otherwise

@@ -8,14 +8,16 @@ import logging
 
 
 def init_logger(module, level="DEBUG", fn=None):
-    """
-    Initialize logging parameters and levels of logging
+    """Initialize logging parameters and levels of logging.
 
     Parameters
     ----------
-    module: name of the module to log
-    level: level of logging. e.g. ``DEBUG``, ``INFO`` etc
-    fn: file name
+    module: str
+      name of the module to log
+    level: str
+      level of logging. e.g. ``DEBUG``, ``INFO`` etc
+    fn: str
+      file name
 
     Returns
     -------

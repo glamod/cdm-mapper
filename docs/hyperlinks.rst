@@ -3,7 +3,7 @@
 
 .. _git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
-.. _IPythn: https://jupyter.readthedocs.io/en/latest/install.html
+.. _IPython: https://jupyter.readthedocs.io/en/latest/install.html
 
 .. _installing the mdf_reader: https://mdf-reader.readthedocs.io/en/mdf_reader/tool-set-up.html#
 

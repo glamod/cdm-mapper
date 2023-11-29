@@ -66,4 +66,4 @@ And you should see the following information for your ``cdm_mapper_env``::
     [Clang 12.0.0 (clang-1200.0.32.28)]
     sys.version_info(major=3, minor=7, micro=3, releaselevel='final', serial=0)
 
-.. include: hyperlinks.rst
+.. include:: hyperlinks.rst

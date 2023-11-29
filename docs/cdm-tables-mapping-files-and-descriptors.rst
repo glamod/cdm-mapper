@@ -161,7 +161,7 @@ The code table above, is use by the ``icoads_r3000`` imodel to map ``platform_su
 
 The "key" in this case, will be the value read from the ICOADS section ``c1`` and element ``PT``, for key values equal to 7 a 69 code will be assigned.
 
-Code tables can be also used for simple transformations of the elements, depending on the medata data to map. e.g. The case of deck 701, where we expand ship names to the ships original full name. We do this by reading meta data information from the ``c99`` ICOADS supplemental data attachment. The imodel for deck 701 provides a code table to transform the names into the ships original name format recorded in the original ship logbook (to see the ``ship_names.json`` code_table click in the following `file <>`_)::
+Code tables can be also used for simple transformations of the elements, depending on the medata data to map. e.g. The case of deck 701, where we expand ship names to the ships original full name. We do this by reading meta data information from the ``c99`` ICOADS supplemental data attachment. The imodel for deck 701 provides a code table to transform the names into the ships original name format recorded in the original ship logbook::
 
      "station_name": {
             "sections": "core",

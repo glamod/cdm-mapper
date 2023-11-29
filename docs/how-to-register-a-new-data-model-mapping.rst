@@ -36,11 +36,11 @@ This is a summary of the steps needed to add an imodel to the mapping tool:
     - Direct mapping via ``code_tables`` that can take one or multiple imodel elements.
     - Assignment of a default value.
     - Any other mapping including any combination of the following can be achieved using functions defined in the ``imodel.py`` module:
+
     a.	imodel elements attributes
     b.	parameterization with input keyword arguments
     c.	one or multiple imodel elements
     d.	transforming function from/to coded elements other than direct mapping with code tables can be defined here (i.e.: imodel key to CDM value or imodel value to CDM key)
-
 
 4. Create :ref:`cdm-code-tables` to transform variables if these required a specific key to translate the information into the CDM.
 

@@ -73,7 +73,7 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
             imodel_functions_mdl = importlib.import_module(
                 imodel_functions_mdl_tree, package=None
             )
-            imodel_functions_mdl = imodel_functions_mdl.mapping_functions(data_atts)
+            imodel_functions = imodel_functions_mdl.mapping_functions(data_atts)
         else:
             logger.warning(f"No mapping functions found for model {imodel}")
         # Read code table mappings
@@ -200,7 +200,7 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
                     logger.debug("\tkwargs: {}".format(",".join(list(kwargs.keys()))))
 
                     # os._exit(1)
-                    trans = eval("imodel_functions." + transform)
+                    trans = getattr(imodel_functions, transform)
                     logger.debug(f"\ttable_df_i Index: {table_df_i.index}")
                     logger.debug(f"\tidata_i Index: {idata.index}")
                     logger.debug(f"\tnotna_idx: {notna_idx}")
@@ -263,8 +263,8 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
                     else:
                         cdm_tables[table]["atts"][cdm_key].update(
                             {
-                                "decimal_places": eval(
-                                    "imodel_functions." + decimal_places
+                                "decimal_places": getattr(
+                                    imodel_functions, decimal_places
                                 )(elements)
                             }
                         )

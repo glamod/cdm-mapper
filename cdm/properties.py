@@ -1,7 +1,7 @@
 import glob
 import os
 
-mappings_lib = os.path.join(os.path.dirname(__file__), "lib", "mappings")
+mappings_lib = os.path.join(os.path.dirname(__file__), "library", "mappings")
 supported_models = [
     os.path.basename(x).split(".")[0]
     for x in glob.glob(mappings_lib + "/*/*.py")

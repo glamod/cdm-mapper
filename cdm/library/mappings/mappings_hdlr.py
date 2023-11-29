@@ -16,7 +16,7 @@ import json
 import os
 from copy import deepcopy
 
-import cdm.common.logging_hdlr as logging_hdlr
+from ...common import logging_hdlr
 
 tool_name = "cdm"
 module_path = os.path.dirname(os.path.abspath(__file__))
@@ -111,9 +111,7 @@ def get_functions_module_path(imodel, log_level="INFO"):
     else:
         imodel_module_tree = module_tree.copy()
         imodel_module_tree.extend([imodel, imodel])
-        return ".".join(
-            imodel_module_tree
-        )  #'cdm.mapper.lib.' + '.'.join([imodel,imodel])
+        return ".".join(imodel_module_tree)
 
 
 def load_code_tables_maps(imodel, codes_subset=None, log_level="INFO"):

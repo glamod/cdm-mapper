@@ -121,11 +121,11 @@ known-third-party = [
 [tool.setuptools]
 packages = ["cdm"]
 
+[tool.setuptools.dynamic]
+dependencies = {file = "ci/requirements/requirements.txt"}
+
 [tool.setuptools_scm]
 fallback_version = "999"
 write_to = "cdm/_version.py"
 write_to_template = '__version__ = "{version}"'
 tag_regex = "^(?P<prefix>v)?(?P<version>[^\\+]+)(?P<suffix>.*)?$"
-
-[tool.setuptools.dynamic]
-dependencies = {file = "ci/requirements/requirements.txt"}

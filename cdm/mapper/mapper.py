@@ -73,7 +73,7 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
             imodel_functions_mdl = importlib.import_module(
                 imodel_functions_mdl_tree, package=None
             )
-            imodel_functions = imodel_functions_mdl.mapping_functions(data_atts)
+            imodel_functions_mdl = imodel_functions_mdl.mapping_functions(data_atts)
         else:
             logger.warning(f"No mapping functions found for model {imodel}")
         # Read code table mappings
@@ -218,7 +218,7 @@ def _map(imodel, data, data_atts, cdm_subset=None, log_level="INFO"):
 
                     try:
                         to_map = to_map.to_frame()
-                    except:
+                    except Exception:
                         pass
 
                     to_map_str = to_map.astype(str)

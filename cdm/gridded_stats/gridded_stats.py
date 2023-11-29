@@ -421,16 +421,18 @@ def global_from_monthly_cdm(
     logging.info(f"Saving hdr file to parquet in {scratch_dir}")
     try:
         header_parq_path = os.path.join(scratch_dir, "header.parq.tmp")
-        with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
-            0.5
-        ) as rprof:
+        # with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
+        #    0.5
+        # ) as rprof:
+        with diag.ProgressBar(), diag.Profiler(), diag.ResourceProfiler(0.5):
             header_df.to_parquet(header_parq_path)
         del header_df
 
         logging.info("Reading header from parquet")
-        with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
-            0.5
-        ) as rprof:
+        # with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
+        #    0.5
+        # ) as rprof:
+        with diag.ProgressBar(), diag.Profiler(), diag.ResourceProfiler(0.5):
             header_df = dd.read_parquet(header_parq_path)
         if qc_report:
             logging.info("Subsetting header report_quality")
@@ -495,15 +497,17 @@ def global_from_monthly_cdm(
         logging.info(f"Saving obs file to parquet in {scratch_dir}")
         try:
             obs_parq_path = os.path.join(scratch_dir, table + ".parq.tmp")
-            with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
-                0.5
-            ) as rprof:
+            # with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
+            #    0.5
+            # ) as rprof:
+            with diag.ProgressBar(), diag.Profiler(), diag.ResourceProfiler(0.5):
                 obs_df.to_parquet(obs_parq_path)
             del obs_df
             # Read the data
-            with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
-                0.5
-            ) as rprof:
+            # with diag.ProgressBar(), diag.Profiler() as prof, diag.ResourceProfiler(
+            #    0.5
+            # ) as rprof:
+            with diag.ProgressBar(), diag.Profiler(), diag.ResourceProfiler(0.5):
                 obs_df = dd.read_parquet(obs_parq_path)
             obs_df = obs_df.set_index(obs_df["report_id"])
             qcr_index = qcr_index[qcr_index.isin(obs_df.index.compute())]

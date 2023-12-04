@@ -11,7 +11,6 @@ dependencies:
     - matplotlib
     - datashader
     - xarray
-    - msgpack
 
     #documentation
     - ipython
@@ -21,3 +20,7 @@ dependencies:
     - sphinx-codeautolink
     - sphinx-copybutton
     - sphinx_rtd_theme >=1.0
+
+    #from pypi
+    - pip:
+      - msgpack

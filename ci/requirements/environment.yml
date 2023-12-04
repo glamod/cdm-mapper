@@ -10,8 +10,10 @@ dependencies:
     - matplotlib
     - xarray
     - datashader
-    - msgpack
     # for testing
     - pytest
     - pytest-cov
     - pytest-env
+    # from pipy
+    - pip:
+      - msgpack
